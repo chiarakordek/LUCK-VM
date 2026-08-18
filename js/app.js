@@ -386,13 +386,65 @@
     if (btnContact) {
       btnContact.addEventListener('click', (e) => {
         e.preventDefault();
-        const numero = appConfig.whatsapp?.numero || '';
-        if (!numero) {
-          showToast('WhatsApp no configurado. Próximamente disponible.');
+        const overlay = $('#contactOverlay');
+        overlay.style.display = 'flex';
+        requestAnimationFrame(() => overlay.classList.add('active'));
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    const contactClose = $('#contactClose');
+    if (contactClose) {
+      contactClose.addEventListener('click', () => {
+        const overlay = $('#contactOverlay');
+        overlay.classList.remove('active');
+        setTimeout(() => { overlay.style.display = 'none'; document.body.style.overflow = ''; }, 300);
+      });
+    }
+
+    const contactOverlay = $('#contactOverlay');
+    if (contactOverlay) {
+      contactOverlay.addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+          contactOverlay.classList.remove('active');
+          setTimeout(() => { contactOverlay.style.display = 'none'; document.body.style.overflow = ''; }, 300);
+        }
+      });
+    }
+
+    const contactForm = $('#contactForm');
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = $('#contactName').value.trim();
+        const phone = $('#contactPhone').value.trim();
+        const type = $('#contactType').value;
+        const message = $('#contactMessage').value.trim();
+
+        if (!name || !phone || !message) {
+          showToast('Completá todos los campos', true);
           return;
         }
-        const msg = encodeURIComponent('Hola! Me interesa saber más sobre los productos de Luck VM.');
+
+        const numero = appConfig.whatsapp?.numero || '';
+        if (!numero) {
+          showToast('WhatsApp no configurado. Próximamente disponible.', true);
+          return;
+        }
+
+        const msg = encodeURIComponent(
+          `Hola! Soy ${name}.\n` +
+          `Tipo de consulta: ${type}\n\n` +
+          `${message}\n\n` +
+          `Mi número de contacto: ${phone}`
+        );
         window.open(`https://wa.me/${numero}?text=${msg}`, '_blank');
+
+        contactForm.reset();
+        const overlay = $('#contactOverlay');
+        overlay.classList.remove('active');
+        setTimeout(() => { overlay.style.display = 'none'; document.body.style.overflow = ''; }, 300);
+        showToast('Consulta enviada!');
       });
     }
   }

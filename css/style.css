@@ -132,9 +132,26 @@ body {
 }
 
 .sticky-logo {
-  height: 40px;
+  height: 36px;
   width: auto;
   object-fit: contain;
+}
+
+.sticky-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sticky-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .btn-contact {
@@ -153,6 +170,59 @@ body {
 .btn-contact:hover {
   box-shadow: 0 4px 16px rgba(0, 230, 118, 0.4);
   transform: translateY(-1px);
+}
+
+/* ===== CONTACT FORM ===== */
+#contactOverlay .modal {
+  max-width: 500px;
+}
+
+#contactForm .form-group {
+  margin-bottom: 16px;
+}
+
+#contactForm label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+#contactForm input,
+#contactForm textarea,
+#contactForm select {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: var(--transition);
+}
+
+#contactForm input:focus,
+#contactForm textarea:focus,
+#contactForm select:focus {
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.1);
+}
+
+#contactForm textarea {
+  resize: vertical;
+}
+
+#contactForm select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23999' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
 }
 
 /* ===== SEARCH BAR ===== */
@@ -918,16 +988,51 @@ body {
 /* ===== FOOTER ===== */
 .footer {
   text-align: center;
-  padding: 32px 24px;
-  color: var(--text-muted);
-  font-size: 0.85rem;
+  padding: 40px 24px 24px;
   border-top: 1px solid var(--border);
   margin-top: 40px;
 }
 
-.footer a {
+.footer-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.footer-logo {
+  width: 80px;
+  height: auto;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.social-link {
+  color: var(--text-muted);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+.social-link:hover {
   color: var(--accent-green);
-  text-decoration: none;
+  border-color: var(--accent-green);
+  background: rgba(0, 230, 118, 0.1);
+}
+
+.footer-copy {
+  color: var(--text-muted);
+  font-size: 0.8rem;
 }
 
 /* ===== TOAST NOTIFICATION ===== */
