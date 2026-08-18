@@ -319,18 +319,6 @@
     renderProducts();
     updateCartBadge();
 
-    if (appConfig.catalogo?.subtitulo) {
-      const sub = $('.subtitle');
-      if (sub) sub.textContent = appConfig.catalogo.subtitulo;
-    }
-
-    if (appConfig.catalogo?.videoUrl) {
-      const videoContainer = $('#headerVideo');
-      if (videoContainer) {
-        videoContainer.innerHTML = `<iframe src="${appConfig.catalogo.videoUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:100%;border-radius:12px;"></iframe>`;
-      }
-    }
-
     $('#searchInput').addEventListener('input', (e) => {
       const search = e.target.value.trim();
       renderProducts(activeSection, search);
