@@ -372,6 +372,29 @@
         closeCart();
       }
     });
+
+    const stickyHeader = $('#stickyHeader');
+    const headerEl = $('.header');
+    if (stickyHeader && headerEl) {
+      const observer = new IntersectionObserver(([entry]) => {
+        stickyHeader.classList.toggle('visible', !entry.isIntersecting);
+      }, { threshold: 0 });
+      observer.observe(headerEl);
+    }
+
+    const btnContact = $('#btnContact');
+    if (btnContact) {
+      btnContact.addEventListener('click', (e) => {
+        e.preventDefault();
+        const numero = appConfig.whatsapp?.numero || '';
+        if (!numero) {
+          showToast('WhatsApp no configurado. Próximamente disponible.');
+          return;
+        }
+        const msg = encodeURIComponent('Hola! Me interesa saber más sobre los productos de Luck VM.');
+        window.open(`https://wa.me/${numero}?text=${msg}`, '_blank');
+      });
+    }
   }
 
   document.addEventListener('DOMContentLoaded', init);
