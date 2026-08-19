@@ -651,6 +651,215 @@ body {
   background-clip: text;
 }
 
+/* ===== CALCULATOR ===== */
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.calc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.calc-card-wide {
+  grid-column: 1 / -1;
+}
+
+.calc-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--accent-green);
+}
+
+.calc-field {
+  margin-bottom: 12px;
+}
+
+.calc-field label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.calc-field input[type="number"] {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: var(--transition);
+}
+
+.calc-field input[type="number"]:focus {
+  border-color: var(--accent-green);
+}
+
+.calc-sub {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.calc-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calc-time input {
+  width: 80px;
+  text-align: center;
+}
+
+.calc-time span {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.calc-checks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.calc-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.calc-check:hover {
+  border-color: var(--accent-green);
+}
+
+.calc-check input[type="checkbox"] {
+  accent-color: var(--accent-green);
+  width: 16px;
+  height: 16px;
+}
+
+.calc-check-label {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.calc-check-price {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.calc-result {
+  text-align: right;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.calc-extra-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.calc-extra-row span:first-child {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.calc-extra-row span:nth-child(2) {
+  font-weight: 600;
+  color: var(--accent-gold);
+}
+
+.calc-extra-remove {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.calc-add-extra {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.calc-add-extra input {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.calc-add-extra input:first-child {
+  flex: 1;
+}
+
+.calc-add-extra input:last-of-type {
+  width: 100px;
+}
+
+.calc-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(0, 230, 118, 0.1), rgba(255, 215, 64, 0.1));
+  border: 1px solid rgba(0, 230, 118, 0.3);
+  border-radius: var(--radius);
+  padding: 24px 32px;
+}
+
+.calc-total span:first-child {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+}
+
+.calc-total-value {
+  font-size: 2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 @media (max-width: 768px) {
   .admin-sidebar {
     transform: translateX(-100%);
@@ -677,5 +886,23 @@ body {
 
   .stats-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .calc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calc-checks {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .calc-add-extra {
+    flex-wrap: wrap;
+  }
+
+  .calc-total {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
   }
 }
