@@ -30,7 +30,6 @@
     $('#loginPassword').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') doLogin();
     });
-    $('#setupBtn').addEventListener('click', setupAccount);
     $('#logoutBtn').addEventListener('click', doLogout);
   }
 
@@ -50,38 +49,6 @@
       console.error('Login error:', e);
       $('#loginError').textContent = 'Email o contraseña incorrectos';
       $('#loginError').style.display = 'block';
-    }
-  }
-
-  async function setupAccount() {
-    const email = $('#newEmail').value.trim();
-    const pw = $('#newPassword').value;
-    const confirm = $('#newPasswordConfirm').value;
-
-    if (!email || !pw) {
-      showToast('Completá email y contraseña', true);
-      return;
-    }
-    if (pw.length < 6) {
-      showToast('La contraseña debe tener al menos 6 caracteres', true);
-      return;
-    }
-    if (pw !== confirm) {
-      showToast('Las contraseñas no coinciden', true);
-      return;
-    }
-
-    try {
-      await auth.createUserWithEmailAndPassword(email, pw);
-      showToast('Cuenta creada. Bienvenido!');
-      $('#loginSetup').style.display = 'none';
-    } catch (e) {
-      console.error('Setup error:', e);
-      if (e.code === 'auth/email-already-in-use') {
-        showToast('Este email ya está registrado. Ingresá con él.', true);
-      } else {
-        showToast('Error al crear cuenta: ' + e.message, true);
-      }
     }
   }
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luck VM — Registro de Administrador</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="images/logo.png" type="image/png">
+</head>
+<body>
+
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h1>Luck VM</h1>
+      <p>Crear cuenta de administrador</p>
+      <div class="login-field">
+        <label>Clave de registro</label>
+        <input type="password" id="setupKey" placeholder="Pedile la clave al administrador" autocomplete="off">
+      </div>
+      <div class="login-field">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="tu@email.com" autocomplete="email">
+      </div>
+      <div class="login-field">
+        <label>Contraseña</label>
+        <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+      </div>
+      <div class="login-field">
+        <label>Confirmar contraseña</label>
+        <input type="password" id="regPasswordConfirm" placeholder="Repetí tu contraseña" autocomplete="new-password">
+      </div>
+      <div class="login-error" id="regError"></div>
+      <div class="login-field">
+        <button class="login-btn" id="registerBtn">Crear cuenta</button>
+      </div>
+      <div class="login-link">
+        <a href="admin.html">Volver al login</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-admin" id="toastAdmin"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>

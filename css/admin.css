@@ -177,6 +177,23 @@ body {
   color: var(--bg-primary);
 }
 
+.login-link {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.login-link a {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.login-link a:hover {
+  color: var(--accent-green);
+}
+
 /* ===== ADMIN LAYOUT ===== */
 .admin-layout {
   display: none;
