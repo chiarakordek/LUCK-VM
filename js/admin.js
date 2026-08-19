@@ -98,7 +98,7 @@
     if (page === 'productos') renderProductsTable();
     if (page === 'secciones') renderSectionsTable();
     if (page === 'configuracion') renderConfigForm();
-    if (page === 'calculadora') renderCalculator();
+    if (page === 'calculadora' && typeof window.renderCalculator === 'function') window.renderCalculator();
   }
 
   // ===== DASHBOARD =====
