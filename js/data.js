@@ -6,17 +6,6 @@ const CATALOGO_DATA = {
       orden: 1,
       productos: [
         {
-          id: "caja-pokemon",
-          nombre: "Caja Porta Cartas Pokémon (Deck Box)",
-          tag: "TCG • Coleccionables & Protección",
-          descripcionCorta: "Contenedor temático de alta resistencia diseñado con tapa en relieve de Pikachu y Pokébola.",
-          descripcionCompleta: "Contenedor temático de alta resistencia diseñado con tapa en relieve de Pikachu y Pokébola. Ideal para organizar, transportar y proteger mazos contra golpes y polvo.",
-          caracteristicas: "Cierre con trabas reforzadas tipo clip, bisagras articuladas y capacidad óptima con o sin sleeves.",
-          imagen: "images/caja-pokemon.jpeg",
-          colores: ["Azul", "Rojo", "Negro"],
-          destacado: false
-        },
-        {
           id: "tetris-balance",
           nombre: "Tetris Balance 3D",
           tag: "Destreza & Equilibrio",
@@ -269,36 +258,14 @@ const CATALOGO_DATA = {
       orden: 4,
       productos: [
         {
-          id: "poke-box-mini",
-          nombre: "Poke Box Mini",
-          tag: "Pokémon • Almacenamiento",
-          descripcionCorta: "Caja compacta para guardar cartas Pokémon coleccionables.",
-          descripcionCompleta: "Caja compacta diseñada para almacenar y proteger cartas Pokémon coleccionables. Tamaño ideal para llevar en la mochila.",
-          caracteristicas: "Capacidad para 50+ cartas, cierre seguro, material resistente.",
-          imagen: "images/poke-box-mini.png",
+          id: "caja-pokemon",
+          nombre: "Caja Porta Cartas Pokémon (Deck Box)",
+          tag: "Pokémon • Coleccionables & Protección",
+          descripcionCorta: "Contenedor temático de alta resistencia diseñado con tapa en relieve de Pikachu y Pokébola.",
+          descripcionCompleta: "Contenedor temático de alta resistencia diseñado con tapa en relieve de Pikachu y Pokébola. Ideal para organizar, transportar y proteger mazos contra golpes y polvo.",
+          caracteristicas: "Cierre con trabas reforzadas tipo clip, bisagras articuladas y capacidad óptima con o sin sleeves.",
+          imagen: "images/caja-pokemon.jpeg",
           colores: [],
-          destacado: false
-        },
-        {
-          id: "poke-box-standard",
-          nombre: "Poke Box Standard",
-          tag: "Pokémon • Almacenamiento",
-          descripcionCorta: "Caja mediana con espacio para mazos completos y cartas sueltas.",
-          descripcionCompleta: "Caja mediana con espacio para mazos completos y cartas sueltas. Divisorios internos para organizar por rareza o tipo.",
-          caracteristicas: "Capacidad para 150+ cartas, divisorios ajustables, cierre con traba.",
-          imagen: "images/poke-box-standard.png",
-          colores: ["Rojo", "Negro"],
-          destacado: false
-        },
-        {
-          id: "poke-box-pro",
-          nombre: "Poke Box Pro",
-          tag: "Pokémon • Almacenamiento Premium",
-          descripcionCorta: "Caja premium con tapa transparente para exhibir tus cartas favoritas.",
-          descripcionCompleta: "Caja premium con tapa transparente para exhibir tus cartas favoritas. Diseño premium con acabados detallados y protección UV.",
-          caracteristicas: "Capacidad para 300+ cartas, tapa transparente, protección UV, cierre magnético.",
-          imagen: "images/poke-box-pro.png",
-          colores: ["Azul", "Rojo"],
           destacado: false
         }
       ]
