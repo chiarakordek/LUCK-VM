@@ -426,19 +426,14 @@
           return;
         }
 
-        const numero = appConfig.whatsapp?.numero || '';
-        if (!numero) {
-          showToast('WhatsApp no configurado. Próximamente disponible.', true);
-          return;
-        }
-
-        const msg = encodeURIComponent(
+        const subject = encodeURIComponent(`Consulta - ${type}`);
+        const body = encodeURIComponent(
           `Hola! Soy ${name}.\n` +
-          `Tipo de consulta: ${type}\n\n` +
-          `${message}\n\n` +
-          `Mi número de contacto: ${phone}`
+          `Tipo de consulta: ${type}\n` +
+          `Teléfono: ${phone}\n\n` +
+          `${message}`
         );
-        window.open(`https://wa.me/${numero}?text=${msg}`, '_blank');
+        window.open(`mailto:somosluckvm@gmail.com?subject=${subject}&body=${body}`, '_blank');
 
         contactForm.reset();
         const overlay = $('#contactOverlay');
