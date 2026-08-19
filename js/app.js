@@ -93,10 +93,6 @@
   }
 
   function renderCard(product) {
-    const colorsHtml = (product.colores || []).slice(0, 4).map(c =>
-      `<span class="color-dot" title="${c}" style="background:${colorToHex(c)}"></span>`
-    ).join('');
-
     return `
       <div class="product-card" data-product-id="${product.id}">
         <img class="card-image" src="${product.imagen}" alt="${product.nombre}" loading="lazy">
@@ -106,7 +102,6 @@
           <p class="card-desc">${product.descripcionCorta}</p>
         </div>
         <div class="card-footer">
-          <div class="card-colors">${colorsHtml}</div>
           <button class="card-add-btn" data-add="${product.id}" title="Agregar al carrito">+</button>
         </div>
       </div>
@@ -178,11 +173,7 @@
     $('#modalCaract').innerHTML = `<strong>Características:</strong> ${product.caracteristicas}`;
     $('#qtyValue').textContent = '1';
 
-    const colorsList = $('#modalColorsList');
-    colorsList.innerHTML = (product.colores || []).map(c =>
-      `<span class="color-chip">${c}</span>`
-    ).join('');
-    $('#modalColors').style.display = (product.colores || []).length ? 'block' : 'none';
+    $('#qtyValue').textContent = '1';
 
     const overlay = $('#modalOverlay');
     overlay.style.display = 'flex';

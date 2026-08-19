@@ -262,6 +262,46 @@ const CATALOGO_DATA = {
           destacado: false
         }
       ]
+    },
+    {
+      id: "pokemon",
+      nombre: "Pokémon",
+      orden: 4,
+      productos: [
+        {
+          id: "pikachu-fidget",
+          nombre: "Pikachu Fidget",
+          tag: "Pokémon • Fidget",
+          descripcionCorta: "Fidget táctil con forma de Pikachu, perfecto para llevar en el bolsillo.",
+          descripcionCompleta: "Fidget táctil con forma de Pikachu, perfecto para llevar en el bolsillo. Diseño detallado con los rasgos icónicos del Pokémon más famoso.",
+          caracteristicas: "Material resistente, acabado liso, tamaño compacto. Ideal para estrés y concentración.",
+          imagen: "images/pikachu-fidget.png",
+          colores: [],
+          destacado: false
+        },
+        {
+          id: "pokebola-caja",
+          nombre: "Pokébola Case",
+          tag: "Pokémon • Almacenamiento",
+          descripcionCorta: "Caja redonda con diseño de Pokébola para guardar accesorios pequeños.",
+          descripcionCompleta: "Caja redonda con diseño de Pokébola para guardar accesorios pequeños, cartas, monedas o dados. Tapa giratoria con cierre magnético.",
+          caracteristicas: "Cierre magnético, tamaño 8cm diámetro, interior acolchado.",
+          imagen: "images/pokebola-case.png",
+          colores: ["Rojo", "Blanco"],
+          destacado: false
+        },
+        {
+          id: "eevee-dado",
+          nombre: "Eevee Dado Protector",
+          tag: "Pokémon • TCG",
+          descripcionCorta: "Protector de dados con forma de Eevee, coleccionable y funcional.",
+          descripcionCompleta: "Protector de dados con forma de Eevee, coleccionable y funcional. Mantiene tus dados seguros con estilo Pokémon.",
+          caracteristicas: "Apta para dados estándar de 20mm, material flexible pero resistente.",
+          imagen: "images/eevee-dado.png",
+          colores: ["Marrón"],
+          destacado: false
+        }
+      ]
     }
   ],
   version: "1.0.0",
