@@ -417,11 +417,11 @@
       contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = $('#contactName').value.trim();
-        const phone = $('#contactPhone').value.trim();
+        const email = $('#contactEmail').value.trim();
         const type = $('#contactType').value;
         const message = $('#contactMessage').value.trim();
 
-        if (!name || !phone || !message) {
+        if (!name || !email || !message) {
           showToast('Completá todos los campos', true);
           return;
         }
@@ -429,8 +429,8 @@
         const subject = encodeURIComponent(`Consulta - ${type}`);
         const body = encodeURIComponent(
           `Hola! Soy ${name}.\n` +
-          `Tipo de consulta: ${type}\n` +
-          `Teléfono: ${phone}\n\n` +
+          `Email: ${email}\n` +
+          `Tipo de consulta: ${type}\n\n` +
           `${message}`
         );
         window.open(`mailto:somosluckvm@gmail.com?subject=${subject}&body=${body}`, '_blank');
