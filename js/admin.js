@@ -825,10 +825,10 @@
         renderDashboard();
         renderProductsTable();
         renderSectionsTable();
-        toast('Catálogo reseteado correctamente');
+        showToast('Catálogo reseteado correctamente');
       } catch (err) {
         console.error('Error reset:', err);
-        toast('Error al resetear: ' + err.message);
+        showToast('Error al resetear: ' + err.message, true);
       }
       btn.disabled = false;
       btn.textContent = '🔄 Resetear Catálogo (re-seedear datos)';
