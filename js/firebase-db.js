@@ -122,6 +122,25 @@ const FirebaseDB = (() => {
     await saveStock({ actual: 1000, minimo: 300, historial: [] });
   }
 
+  // ===== RESET CATALOGO (borrar y re-seedear) =====
+  async function resetCatalogo() {
+    const snapshot = await db.collection(SECCIONES_COL).get();
+    const batch = db.batch();
+    snapshot.docs.forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+
+    const defaultData = typeof CATALOGO_DATA !== 'undefined' ? CATALOGO_DATA : null;
+    if (!defaultData) return;
+
+    for (const sec of defaultData.secciones) {
+      await db.collection(SECCIONES_COL).add({
+        nombre: sec.nombre,
+        orden: sec.orden,
+        productos: sec.productos
+      });
+    }
+  }
+
   // ===== PEDIDOS =====
   const PEDIDOS_COL = 'pedidos';
 
@@ -193,6 +212,7 @@ const FirebaseDB = (() => {
     deleteProducto,
     moveProducto,
     seedData,
+    resetCatalogo,
     savePedido,
     getPedidos,
     updatePedido,

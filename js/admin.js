@@ -813,6 +813,20 @@
 
     $('#btnAddProduct').addEventListener('click', () => openProductForm(null, null));
     $('#btnAddSection').addEventListener('click', () => openSectionForm(null));
+
+    $('#btnResetCatalogo').addEventListener('click', async () => {
+      if (!confirm('⚠️ Esto va a BORRAR todos los productos y secciones actuales y recargar los datos de data.js. ¿Continuar?')) return;
+      try {
+        await FirebaseDB.resetCatalogo();
+        secciones = await FirebaseDB.getSecciones();
+        renderDashboard();
+        renderProductsTable();
+        renderSectionsTable();
+        toast('Catálogo reseteado correctamente');
+      } catch (err) {
+        toast('Error al resetear: ' + err.message);
+      }
+    });
   }
 
   document.addEventListener('DOMContentLoaded', init);
