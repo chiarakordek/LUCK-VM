@@ -816,6 +816,9 @@
 
     $('#btnResetCatalogo').addEventListener('click', async () => {
       if (!confirm('⚠️ Esto va a BORRAR todos los productos y secciones actuales y recargar los datos de data.js. ¿Continuar?')) return;
+      const btn = $('#btnResetCatalogo');
+      btn.disabled = true;
+      btn.textContent = 'Borrando...';
       try {
         await FirebaseDB.resetCatalogo();
         secciones = await FirebaseDB.getSecciones();
@@ -824,8 +827,11 @@
         renderSectionsTable();
         toast('Catálogo reseteado correctamente');
       } catch (err) {
+        console.error('Error reset:', err);
         toast('Error al resetear: ' + err.message);
       }
+      btn.disabled = false;
+      btn.textContent = '🔄 Resetear Catálogo (re-seedear datos)';
     });
   }
 

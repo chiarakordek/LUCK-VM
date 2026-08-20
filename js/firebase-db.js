@@ -125,12 +125,12 @@ const FirebaseDB = (() => {
   // ===== RESET CATALOGO (borrar y re-seedear) =====
   async function resetCatalogo() {
     const snapshot = await db.collection(SECCIONES_COL).get();
-    const batch = db.batch();
-    snapshot.docs.forEach(doc => batch.delete(doc.ref));
-    await batch.commit();
+    for (const doc of snapshot.docs) {
+      await db.collection(SECCIONES_COL).doc(doc.id).delete();
+    }
 
     const defaultData = typeof CATALOGO_DATA !== 'undefined' ? CATALOGO_DATA : null;
-    if (!defaultData) return;
+    if (!defaultData) throw new Error('CATALOGO_DATA no encontrado');
 
     for (const sec of defaultData.secciones) {
       await db.collection(SECCIONES_COL).add({
