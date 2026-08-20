@@ -906,3 +906,255 @@ body {
     text-align: center;
   }
 }
+
+/* ===== PEDIDOS ===== */
+.pedido-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pedido-fecha {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.pedido-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-pending {
+  background: rgba(255, 215, 64, 0.15);
+  color: var(--accent-gold);
+}
+
+.badge-confirmed {
+  background: rgba(0, 230, 118, 0.15);
+  color: var(--accent-green);
+}
+
+.badge-cancelled {
+  background: rgba(239, 83, 80, 0.15);
+  color: var(--danger);
+}
+
+.pedido-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pedido-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background: var(--bg-sidebar);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+.pedido-item-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.pedido-item-qty {
+  color: var(--text-muted);
+}
+
+.pedido-item-grams {
+  color: var(--accent-green);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pedido-item-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.qty-btn-sm {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.qty-btn-sm:hover {
+  background: var(--accent-green);
+  color: var(--bg-primary);
+  border-color: var(--accent-green);
+}
+
+.pedido-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.pedido-total-grams {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.pedido-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ===== STOCK ===== */
+.stock-summary {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.stock-summary.stock-low {
+  border-color: var(--danger);
+  background: rgba(239, 83, 80, 0.05);
+}
+
+.stock-current {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stock-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stock-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-green);
+}
+
+.stock-low .stock-value {
+  color: var(--danger);
+}
+
+.stock-alert {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--danger);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stock-min {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stock-value-sm {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.stock-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stock-controls > div {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.stock-controls h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.stock-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.stock-input-row input {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.stock-input-row input:focus {
+  outline: none;
+  border-color: var(--accent-green);
+}
+
+.stock-history {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.stock-history h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.stock-in {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.stock-out {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}

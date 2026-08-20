@@ -118,6 +118,67 @@ const FirebaseDB = (() => {
       whatsapp: { numero: '' },
       catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: '' }
     });
+
+    await saveStock({ actual: 1000, minimo: 300, historial: [] });
+  }
+
+  // ===== PEDIDOS =====
+  const PEDIDOS_COL = 'pedidos';
+
+  async function savePedido(pedido) {
+    const ref = await db.collection(PEDIDOS_COL).add({
+      ...pedido,
+      estado: 'pendiente',
+      fecha: new Date().toISOString(),
+      fechaModificacion: new Date().toISOString()
+    });
+    return ref.id;
+  }
+
+  async function getPedidos() {
+    const snapshot = await db.collection(PEDIDOS_COL).orderBy('fecha', 'desc').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async function updatePedido(id, data) {
+    await db.collection(PEDIDOS_COL).doc(id).update({
+      ...data,
+      fechaModificacion: new Date().toISOString()
+    });
+  }
+
+  async function deletePedido(id) {
+    await db.collection(PEDIDOS_COL).doc(id).delete();
+  }
+
+  // ===== STOCK =====
+  const STOCK_DOC = 'stock';
+
+  async function getStock() {
+    try {
+      const doc = await db.collection('admin').doc(STOCK_DOC).get();
+      if (doc.exists) return doc.data();
+    } catch (e) { /* ignore */ }
+    return { actual: 1000, minimo: 300, historial: [] };
+  }
+
+  async function saveStock(data) {
+    await db.collection('admin').doc(STOCK_DOC).set(data, { merge: true });
+  }
+
+  async function updateStock(gramos, motivo) {
+    const stock = await getStock();
+    stock.actual = Math.max(0, stock.actual + gramos);
+    stock.historial = stock.historial || [];
+    stock.historial.unshift({
+      cambio: gramos,
+      motivo: motivo || (gramos > 0 ? 'Compra de filamento' : 'Pedido despachado'),
+      fecha: new Date().toISOString(),
+      saldo: stock.actual
+    });
+    if (stock.historial.length > 100) stock.historial = stock.historial.slice(0, 100);
+    await saveStock(stock);
+    return stock;
   }
 
   return {
@@ -131,6 +192,13 @@ const FirebaseDB = (() => {
     updateProducto,
     deleteProducto,
     moveProducto,
-    seedData
+    seedData,
+    savePedido,
+    getPedidos,
+    updatePedido,
+    deletePedido,
+    getStock,
+    saveStock,
+    updateStock
   };
 })();

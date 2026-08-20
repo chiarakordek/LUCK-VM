@@ -99,6 +99,8 @@
     if (page === 'secciones') renderSectionsTable();
     if (page === 'configuracion') renderConfigForm();
     if (page === 'calculadora') renderCalculatorPage();
+    if (page === 'pedidos') renderPedidosPage();
+    if (page === 'stock') renderStockPage();
   }
 
   // ===== DASHBOARD =====
@@ -234,6 +236,12 @@
           <input type="text" id="formColores" value="${product?.colores?.join(', ') || ''}" placeholder="Rojo, Azul, Verde">
         </div>
       </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Gramos de filamento</label>
+          <input type="number" id="formFilamentoGrams" value="${product?.filamentoGrams || 0}" min="0" placeholder="0">
+        </div>
+      </div>
       <div class="form-actions">
         <button class="btn-primary" id="formSave">${isEdit ? 'Guardar cambios' : 'Crear producto'}</button>
         <button class="btn-secondary" id="formCancel">Cancelar</button>
@@ -261,6 +269,7 @@
       const caract = $('#formCaract').value;
       const imagen = $('#formImagen').value;
       const colores = $('#formColores').value.split(',').map(c => c.trim()).filter(Boolean);
+      const filamentoGrams = parseInt($('#formFilamentoGrams').value) || 0;
 
       if (!nombre || !seccionId || !imagen) {
         showToast('Completá nombre, sección e imagen', true);
@@ -275,6 +284,7 @@
         caracteristicas: caract,
         imagen,
         colores,
+        filamentoGrams,
         destacado: product?.destacado || false
       };
 
@@ -594,6 +604,200 @@
     document.getElementById('resultComponentes').textContent = calcFmt(cComp);
     document.getElementById('resultExtras').textContent = calcFmt(cExtra);
     document.getElementById('resultTotal').textContent = calcFmt(total);
+  }
+
+  // ===== PEDIDOS =====
+  async function renderPedidosPage() {
+    const container = document.getElementById('pedidosContent');
+    if (!container) return;
+    container.innerHTML = '<p style="color:var(--text-muted);">Cargando pedidos...</p>';
+
+    let pedidos = [];
+    try {
+      pedidos = await FirebaseDB.getPedidos();
+    } catch (e) {
+      container.innerHTML = '<p style="color:var(--danger);">Error al cargar pedidos</p>';
+      return;
+    }
+
+    if (pedidos.length === 0) {
+      container.innerHTML = '<div class="empty-state">No hay pedidos todavía. Los pedidos aparecen cuando un cliente envía el carrito por WhatsApp.</div>';
+      return;
+    }
+
+    container.innerHTML = pedidos.map(p => {
+      const fecha = new Date(p.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      const estadoClass = p.estado === 'pendiente' ? 'badge-pending' : p.estado === 'confirmado' ? 'badge-confirmed' : 'badge-cancelled';
+      const items = (p.items || []).map(item => `
+        <div class="pedido-item">
+          <span class="pedido-item-name">${item.nombre}</span>
+          <span class="pedido-item-qty">x${item.cantidad}</span>
+          <span class="pedido-item-grams">${item.filamentoGrams || 0}g</span>
+          <div class="pedido-item-controls">
+            <button class="qty-btn-sm" data-pedido="${p.id}" data-item-idx="${(p.items || []).indexOf(item)}" data-action="minus">−</button>
+            <button class="qty-btn-sm" data-pedido="${p.id}" data-item-idx="${(p.items || []).indexOf(item)}" data-action="plus">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="pedido-card">
+          <div class="pedido-header">
+            <span class="pedido-fecha">${fecha}</span>
+            <span class="pedido-badge ${estadoClass}">${p.estado}</span>
+          </div>
+          <div class="pedido-items">${items}</div>
+          <div class="pedido-footer">
+            <span class="pedido-total-grams">Total filamento: <strong>${p.totalFilamento || 0}g</strong></span>
+            <div class="pedido-actions">
+              <button class="btn-secondary btn-sm" data-pedido-delete="${p.id}">Eliminar</button>
+              ${p.estado === 'pendiente' ? `<button class="btn-primary btn-sm" data-pedido-confirm="${p.id}">Confirmar</button>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const pedidoId = btn.dataset.pedido;
+        const idx = parseInt(btn.dataset.itemIdx);
+        const action = btn.dataset.action;
+        const pedido = pedidos.find(p => p.id === pedidoId);
+        if (!pedido || !pedido.items[idx]) return;
+
+        if (action === 'plus') pedido.items[idx].cantidad++;
+        if (action === 'minus' && pedido.items[idx].cantidad > 1) pedido.items[idx].cantidad--;
+
+        const product = findProduct(pedido.items[idx].id);
+        pedido.items[idx].filamentoGrams = product?.filamentoGrams || 0;
+        pedido.totalFilamento = pedido.items.reduce((sum, item) => sum + (item.filamentoGrams * item.cantidad), 0);
+
+        await FirebaseDB.updatePedido(pedidoId, { items: pedido.items, totalFilamento: pedido.totalFilamento });
+        renderPedidosPage();
+      });
+    });
+
+    container.querySelectorAll('[data-pedido-confirm]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const pedidoId = btn.dataset.pedidoConfirm;
+        const pedido = pedidos.find(p => p.id === pedidoId);
+        if (!pedido) return;
+
+        const stock = await FirebaseDB.getStock();
+        if (stock.actual < (pedido.totalFilamento || 0)) {
+          showToast('Stock insuficiente para confirmar este pedido', true);
+          return;
+        }
+
+        await FirebaseDB.updatePedido(pedidoId, { estado: 'confirmado' });
+        await FirebaseDB.updateStock(-(pedido.totalFilamento || 0), `Pedido confirmado - ${pedido.items.map(i => i.nombre).join(', ')}`);
+        showToast('Pedido confirmado y stock descontado');
+        renderPedidosPage();
+      });
+    });
+
+    container.querySelectorAll('[data-pedido-delete]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('¿Eliminar este pedido?')) return;
+        await FirebaseDB.deletePedido(btn.dataset.pedidoDelete);
+        showToast('Pedido eliminado');
+        renderPedidosPage();
+      });
+    });
+  }
+
+  // ===== STOCK =====
+  async function renderStockPage() {
+    const container = document.getElementById('stockContent');
+    if (!container) return;
+    container.innerHTML = '<p style="color:var(--text-muted);">Cargando stock...</p>';
+
+    let stock;
+    try {
+      stock = await FirebaseDB.getStock();
+    } catch (e) {
+      container.innerHTML = '<p style="color:var(--danger);">Error al cargar stock</p>';
+      return;
+    }
+
+    const isLow = stock.actual <= stock.minimo;
+    const historial = (stock.historial || []).slice(0, 20);
+
+    container.innerHTML = `
+      <div class="stock-summary ${isLow ? 'stock-low' : ''}">
+        <div class="stock-current">
+          <span class="stock-label">Stock actual</span>
+          <span class="stock-value">${stock.actual}g</span>
+          ${isLow ? '<span class="stock-alert">STOCK BAJO</span>' : ''}
+        </div>
+        <div class="stock-min">
+          <span class="stock-label">Mínimo</span>
+          <span class="stock-value-sm">${stock.minimo}g</span>
+        </div>
+      </div>
+
+      <div class="stock-controls">
+        <div class="stock-add">
+          <h3>Agregar filamento (compra)</h3>
+          <div class="stock-input-row">
+            <input type="number" id="stockAddGrams" placeholder="Gramos" min="0">
+            <button class="btn-primary" id="btnStockAdd">+ Agregar</button>
+          </div>
+        </div>
+        <div class="stock-subtract">
+          <h3>Configurar mínimo</h3>
+          <div class="stock-input-row">
+            <input type="number" id="stockMinInput" value="${stock.minimo}" min="0">
+            <button class="btn-secondary" id="btnStockMin">Guardar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stock-history">
+        <h3>Historial</h3>
+        ${historial.length === 0 ? '<p style="color:var(--text-muted);">Sin movimientos aún</p>' : `
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Movimiento</th>
+                <th>Motivo</th>
+                <th>Saldo</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${historial.map(h => {
+                const fecha = new Date(h.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const cls = h.cambio > 0 ? 'stock-in' : 'stock-out';
+                return `<tr>
+                  <td>${fecha}</td>
+                  <td class="${cls}">${h.cambio > 0 ? '+' : ''}${h.cambio}g</td>
+                  <td>${h.motivo}</td>
+                  <td>${h.saldo}g</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        `}
+      </div>
+    `;
+
+    document.getElementById('btnStockAdd').addEventListener('click', async () => {
+      const grams = parseInt(document.getElementById('stockAddGrams').value) || 0;
+      if (grams <= 0) { showToast('Ingresá una cantidad válida', true); return; }
+      await FirebaseDB.updateStock(grams, 'Compra de filamento');
+      showToast(`+${grams}g agregados al stock`);
+      renderStockPage();
+    });
+
+    document.getElementById('btnStockMin').addEventListener('click', async () => {
+      const min = parseInt(document.getElementById('stockMinInput').value) || 0;
+      stock.minimo = min;
+      await FirebaseDB.saveStock(stock);
+      showToast('Mínimo actualizado');
+      renderStockPage();
+    });
   }
 
   // ===== INIT =====

@@ -269,12 +269,32 @@
     });
   }
 
-  function sendWhatsAppCart() {
+  async function sendWhatsAppCart() {
     if (cart.length === 0) return;
-    const lines = cart.map(item => {
+
+    const items = cart.map(item => {
       const product = findProduct(item.id);
-      return `• ${product?.nombre || item.id} (x${item.cantidad})`;
+      return {
+        id: item.id,
+        nombre: product?.nombre || item.id,
+        cantidad: item.cantidad,
+        filamentoGrams: product?.filamentoGrams || 0
+      };
     });
+
+    const totalFilamento = items.reduce((sum, item) => sum + (item.filamentoGrams * item.cantidad), 0);
+
+    try {
+      await FirebaseDB.savePedido({
+        items,
+        totalFilamento,
+        cliente: 'WhatsApp'
+      });
+    } catch (e) {
+      console.error('Error guardando pedido:', e);
+    }
+
+    const lines = items.map(item => `• ${item.nombre} (x${item.cantidad})`);
     const msg = `Hola! Me interesan estos productos del catálogo Luck VM:\n\n${lines.join('\n')}\n\nQuisiera saber precio, tiempos de entrega y personalización.`;
     openWhatsApp(msg);
   }
