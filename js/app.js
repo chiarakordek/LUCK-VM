@@ -57,8 +57,7 @@
         if (!search) return true;
         const s = search.toLowerCase();
         return p.nombre.toLowerCase().includes(s) ||
-               p.descripcionCorta.toLowerCase().includes(s) ||
-               p.tag.toLowerCase().includes(s);
+                p.descripcion.toLowerCase().includes(s);
       });
 
       if (filtered.length === 0) return;
@@ -97,28 +96,14 @@
       <div class="product-card" data-product-id="${product.id}">
         <img class="card-image" src="${product.imagen}" alt="${product.nombre}" loading="lazy">
         <div class="card-body">
-          <div class="card-tag">${product.tag}</div>
           <h3 class="card-name">${product.nombre}</h3>
-          <p class="card-desc">${product.descripcionCorta}</p>
+          <p class="card-desc">${product.descripcion}</p>
         </div>
         <div class="card-footer">
           <button class="card-add-btn" data-add="${product.id}" title="Agregar al carrito">+</button>
         </div>
       </div>
     `;
-  }
-
-  function colorToHex(name) {
-    const map = {
-      'Azul': '#3b82f6', 'Rojo': '#ef4444', 'Negro': '#333', 'Multicolor': 'linear-gradient(135deg, #f43f5e, #8b5cf6, #06b6d4)',
-      'Verde': '#22c55e', 'Marrón': '#92400e', 'Dorado': '#eab308', 'Amarillo': '#facc15',
-      'Naranja': '#f97316', 'Rosa': '#ec4899', 'Gris': '#9ca3af', 'Celeste': '#7dd3fc',
-      'Lila': '#a78bfa', 'Vainilla': '#fef3c7', 'Menta': '#6ee7b7', 'Blanco': '#f5f5f5',
-      'Tornasol': 'linear-gradient(135deg, #a78bfa, #f472b6, #34d399)',
-      'Pastel multicolor': 'linear-gradient(135deg, #fbcfe8, #c4b5fd, #a7f3d0)',
-      'Marrón chocolate': '#5c3317', 'Manteca': '#d4a054'
-    };
-    return map[name] || '#666';
   }
 
   function bindCardEvents() {
@@ -167,10 +152,8 @@
 
     $('#modalImage').src = product.imagen;
     $('#modalImage').alt = product.nombre;
-    $('#modalTag').textContent = product.tag;
     $('#modalName').textContent = product.nombre;
-    $('#modalDesc').textContent = product.descripcionCompleta;
-    $('#modalCaract').innerHTML = `<strong>Características:</strong> ${product.caracteristicas}`;
+    $('#modalDesc').textContent = product.descripcion;
     $('#qtyValue').textContent = '1';
 
     $('#qtyValue').textContent = '1';

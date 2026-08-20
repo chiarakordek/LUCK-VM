@@ -142,7 +142,6 @@
           <tr>
             <td><img class="col-img" src="${p.imagen}" alt="${p.nombre}"></td>
             <td><strong>${p.nombre}</strong><br><span style="color:var(--text-muted);font-size:0.8rem;">${sec.nombre}</span></td>
-            <td>${p.tag}</td>
             <td class="col-actions">
               <button class="btn-edit" data-edit="${p.id}" data-sec="${sec.id}">Editar</button>
               <button class="btn-delete" data-delete="${p.id}" data-sec="${sec.id}">Eliminar</button>
@@ -153,7 +152,7 @@
     });
 
     if (!rows) {
-      rows = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:40px;">No hay productos. Creá uno nuevo.</td></tr>';
+      rows = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px;">No hay productos. Creá uno nuevo.</td></tr>';
     }
 
     $('#productsTable').innerHTML = `
@@ -162,7 +161,6 @@
           <tr>
             <th></th>
             <th>Producto</th>
-            <th>Categoría</th>
             <th></th>
           </tr>
         </thead>
@@ -211,36 +209,16 @@
         <select id="formSeccion">${sectionOptions}</select>
       </div>
       <div class="form-group">
-        <label>Tag / Categoría</label>
-        <input type="text" id="formTag" value="${product?.tag || ''}" placeholder="Ej: Fidget Gamer">
+        <label>Descripción (cómo se usa / cómo se juega)</label>
+        <textarea id="formDesc">${product?.descripcion || product?.descripcionCorta || ''}</textarea>
       </div>
       <div class="form-group">
-        <label>Descripción corta</label>
-        <input type="text" id="formDescCorta" value="${product?.descripcionCorta || ''}">
+        <label>Ruta de imagen</label>
+        <input type="text" id="formImagen" value="${product?.imagen || 'images/'}" placeholder="images/archivo.png">
       </div>
       <div class="form-group">
-        <label>Descripción completa</label>
-        <textarea id="formDescCompleta">${product?.descripcionCompleta || ''}</textarea>
-      </div>
-      <div class="form-group">
-        <label>Características</label>
-        <textarea id="formCaract">${product?.caracteristicas || ''}</textarea>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Ruta de imagen</label>
-          <input type="text" id="formImagen" value="${product?.imagen || 'images/'}" placeholder="images/archivo.png">
-        </div>
-        <div class="form-group">
-          <label>Colores (separados por coma)</label>
-          <input type="text" id="formColores" value="${product?.colores?.join(', ') || ''}" placeholder="Rojo, Azul, Verde">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Gramos de filamento</label>
-          <input type="number" id="formFilamentoGrams" value="${product?.filamentoGrams || 0}" min="0" placeholder="0">
-        </div>
+        <label>Gramos de filamento</label>
+        <input type="number" id="formFilamentoGrams" value="${product?.filamentoGrams || 0}" min="0" placeholder="0">
       </div>
       <div class="form-actions">
         <button class="btn-primary" id="formSave">${isEdit ? 'Guardar cambios' : 'Crear producto'}</button>
@@ -263,12 +241,8 @@
     $('#formSave').addEventListener('click', async () => {
       const nombre = $('#formNombre').value;
       const seccionId = $('#formSeccion').value;
-      const tag = $('#formTag').value;
-      const descCorta = $('#formDescCorta').value;
-      const descCompleta = $('#formDescCompleta').value;
-      const caract = $('#formCaract').value;
+      const desc = $('#formDesc').value;
       const imagen = $('#formImagen').value;
-      const colores = $('#formColores').value.split(',').map(c => c.trim()).filter(Boolean);
       const filamentoGrams = parseInt($('#formFilamentoGrams').value) || 0;
 
       if (!nombre || !seccionId || !imagen) {
@@ -278,12 +252,8 @@
 
       const productData = {
         nombre,
-        tag,
-        descripcionCorta: descCorta,
-        descripcionCompleta: descCompleta,
-        caracteristicas: caract,
+        descripcion: desc,
         imagen,
-        colores,
         filamentoGrams,
         destacado: product?.destacado || false
       };
@@ -480,8 +450,17 @@
   }
 
   // ===== CALCULATOR =====
-  const CALC_COSTS = { filamento: 25, electricidad: 15, pila: 300, led: 70, clicker: 240, llavero: 200, bolsa: 100, iman: 320 };
-  let calcExtras = [];
+  const CALC_PRESETS = [
+    { name: 'Pila 1220', cost: 300 },
+    { name: 'LED (diodo)', cost: 70 },
+    { name: 'Clicker (switch)', cost: 240 },
+    { name: 'Llavero', cost: 200 },
+    { name: 'Bolsa', cost: 100 },
+    { name: 'Imán', cost: 320 }
+  ];
+  const CALC_FILAMENTO = 25;
+  const CALC_ELECTRICIDAD = 15;
+  let calcComponents = [];
 
   function calcFmt(n) {
     return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -498,7 +477,7 @@
           <div class="calc-field">
             <label>Gramos utilizados</label>
             <input type="number" id="calcGrams" value="0" min="0" step="1">
-            <span class="calc-sub">${calcFmt(CALC_COSTS.filamento)}/gramo</span>
+            <span class="calc-sub">${calcFmt(CALC_FILAMENTO)}/gramo</span>
           </div>
           <div class="calc-result" id="resultFilamento">${calcFmt(0)}</div>
         </div>
@@ -511,31 +490,28 @@
               <span>:</span>
               <input type="number" id="calcMinutes" value="0" min="0" max="59" placeholder="min">
             </div>
-            <span class="calc-sub">BambuLab A1 ~100W · ${calcFmt(CALC_COSTS.electricidad)}/hora</span>
+            <span class="calc-sub">BambuLab A1 ~100W · ${calcFmt(CALC_ELECTRICIDAD)}/hora</span>
           </div>
           <div class="calc-result" id="resultElectricidad">${calcFmt(0)}</div>
         </div>
         <div class="calc-card calc-card-wide">
           <h3>Componentes</h3>
-          <div class="calc-checks">
-            <label class="calc-check"><input type="checkbox" id="calcPila"><span class="calc-check-label">Pila 1220</span><span class="calc-check-price">${calcFmt(CALC_COSTS.pila)}</span></label>
-            <label class="calc-check"><input type="checkbox" id="calcLed"><span class="calc-check-label">LED (diodo)</span><span class="calc-check-price">${calcFmt(CALC_COSTS.led)}</span></label>
-            <label class="calc-check"><input type="checkbox" id="calcClicker"><span class="calc-check-label">Clicker (switch)</span><span class="calc-check-price">${calcFmt(CALC_COSTS.clicker)}</span></label>
-            <label class="calc-check"><input type="checkbox" id="calcLlavero"><span class="calc-check-label">Llavero</span><span class="calc-check-price">${calcFmt(CALC_COSTS.llavero)}</span></label>
-            <label class="calc-check"><input type="checkbox" id="calcBolsa"><span class="calc-check-label">Bolsa</span><span class="calc-check-price">${calcFmt(CALC_COSTS.bolsa)}</span></label>
-            <label class="calc-check"><input type="checkbox" id="calcIman"><span class="calc-check-label">Imán</span><span class="calc-check-price">${calcFmt(CALC_COSTS.iman)}</span></label>
+          <div id="componentsList"></div>
+          <div class="calc-add-component">
+            <div class="calc-presets">
+              <span class="calc-presets-label">Agregar rápido:</span>
+              <div class="calc-presets-btns">
+                ${CALC_PRESETS.map(p => `<button class="btn-preset" data-name="${p.name}" data-cost="${p.cost}">${p.name}</button>`).join('')}
+              </div>
+            </div>
+            <div class="calc-custom-row">
+              <input type="text" id="compName" placeholder="Componente custom">
+              <input type="number" id="compCost" placeholder="Costo unitario $" min="0">
+              <input type="number" id="compQty" placeholder="Cant." min="1" value="1">
+              <button class="btn-primary" id="btnAddComp">+ Agregar</button>
+            </div>
           </div>
           <div class="calc-result" id="resultComponentes">${calcFmt(0)}</div>
-        </div>
-        <div class="calc-card calc-card-wide">
-          <h3>Extras personalizados</h3>
-          <div id="extrasList"></div>
-          <div class="calc-add-extra">
-            <input type="text" id="extraName" placeholder="Nombre (ej: sticker)">
-            <input type="number" id="extraCost" placeholder="Costo $" min="0">
-            <button class="btn-primary" id="btnAddExtra">+ Agregar</button>
-          </div>
-          <div class="calc-result" id="resultExtras">${calcFmt(0)}</div>
         </div>
       </div>
       <div class="calc-total">
@@ -544,42 +520,72 @@
       </div>
     `;
 
-    ['calcGrams', 'calcHours', 'calcMinutes', 'calcPila', 'calcLed', 'calcClicker', 'calcLlavero', 'calcBolsa', 'calcIman'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.addEventListener('input', calcUpdate);
+    ['calcGrams', 'calcHours', 'calcMinutes'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calcUpdate);
     });
 
-    document.getElementById('btnAddExtra').addEventListener('click', calcAddExtra);
-    document.getElementById('extraCost').addEventListener('keydown', (e) => { if (e.key === 'Enter') calcAddExtra(); });
+    document.querySelectorAll('.btn-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        calcComponents.push({ name: btn.dataset.name, cost: parseFloat(btn.dataset.cost), qty: 1 });
+        calcRenderComponents();
+        calcUpdate();
+      });
+    });
 
-    calcExtras = [];
+    document.getElementById('btnAddComp').addEventListener('click', calcAddComponent);
+    document.getElementById('compCost').addEventListener('keydown', (e) => { if (e.key === 'Enter') calcAddComponent(); });
+    document.getElementById('compQty').addEventListener('keydown', (e) => { if (e.key === 'Enter') calcAddComponent(); });
+
+    calcComponents = [];
     calcUpdate();
   }
 
-  function calcAddExtra() {
-    const nameEl = document.getElementById('extraName');
-    const costEl = document.getElementById('extraCost');
+  function calcAddComponent() {
+    const nameEl = document.getElementById('compName');
+    const costEl = document.getElementById('compCost');
+    const qtyEl = document.getElementById('compQty');
     const name = nameEl.value.trim();
     const cost = parseFloat(costEl.value) || 0;
+    const qty = parseInt(qtyEl.value) || 1;
     if (!name || cost <= 0) return;
-    calcExtras.push({ name, cost });
+    calcComponents.push({ name, cost, qty: Math.max(1, qty) });
     nameEl.value = '';
     costEl.value = '';
-    calcRenderExtras();
+    qtyEl.value = '1';
+    calcRenderComponents();
     calcUpdate();
   }
 
-  function calcRenderExtras() {
-    const list = document.getElementById('extrasList');
-    list.innerHTML = calcExtras.map((e, i) => `
+  function calcRenderComponents() {
+    const list = document.getElementById('componentsList');
+    list.innerHTML = calcComponents.map((c, i) => `
       <div class="calc-extra-row">
-        <span>${e.name}</span>
-        <span>${calcFmt(e.cost)}</span>
-        <button class="calc-extra-remove" data-idx="${i}">×</button>
+        <span class="calc-comp-name">${c.name}</span>
+        <span class="calc-comp-price">${calcFmt(c.cost)} c/u</span>
+        <div class="calc-comp-qty">
+          <button class="calc-extra-remove" data-idx="${i}" data-action="minus">−</button>
+          <span>${c.qty}</span>
+          <button class="calc-extra-remove" data-idx="${i}" data-action="plus">+</button>
+        </div>
+        <span class="calc-comp-subtotal">${calcFmt(c.cost * c.qty)}</span>
+        <button class="calc-extra-remove calc-extra-delete" data-idx="${i}" data-action="delete">×</button>
       </div>
     `).join('');
+
     list.querySelectorAll('.calc-extra-remove').forEach(btn => {
-      btn.addEventListener('click', () => { calcExtras.splice(parseInt(btn.dataset.idx), 1); calcRenderExtras(); calcUpdate(); });
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx);
+        const action = btn.dataset.action;
+        if (action === 'delete') {
+          calcComponents.splice(idx, 1);
+        } else if (action === 'plus') {
+          calcComponents[idx].qty++;
+        } else if (action === 'minus') {
+          calcComponents[idx].qty = Math.max(1, calcComponents[idx].qty - 1);
+        }
+        calcRenderComponents();
+        calcUpdate();
+      });
     });
   }
 
@@ -588,21 +594,14 @@
     const hours = parseFloat(document.getElementById('calcHours')?.value) || 0;
     const minutes = parseFloat(document.getElementById('calcMinutes')?.value) || 0;
     const totalHours = hours + (minutes / 60);
-    const cFil = grams * CALC_COSTS.filamento;
-    const cElec = totalHours * CALC_COSTS.electricidad;
-    let cComp = 0;
-    if (document.getElementById('calcPila')?.checked) cComp += CALC_COSTS.pila;
-    if (document.getElementById('calcLed')?.checked) cComp += CALC_COSTS.led;
-    if (document.getElementById('calcClicker')?.checked) cComp += CALC_COSTS.clicker;
-    if (document.getElementById('calcLlavero')?.checked) cComp += CALC_COSTS.llavero;
-    if (document.getElementById('calcBolsa')?.checked) cComp += CALC_COSTS.bolsa;
-    if (document.getElementById('calcIman')?.checked) cComp += CALC_COSTS.iman;
-    const cExtra = calcExtras.reduce((s, e) => s + e.cost, 0);
-    const total = cFil + cElec + cComp + cExtra;
+    const cFil = grams * CALC_FILAMENTO;
+    const cElec = totalHours * CALC_ELECTRICIDAD;
+    const cComp = calcComponents.reduce((s, c) => s + (c.cost * c.qty), 0);
+    const total = cFil + cElec + cComp;
+
     document.getElementById('resultFilamento').textContent = calcFmt(cFil);
     document.getElementById('resultElectricidad').textContent = calcFmt(cElec);
     document.getElementById('resultComponentes').textContent = calcFmt(cComp);
-    document.getElementById('resultExtras').textContent = calcFmt(cExtra);
     document.getElementById('resultTotal').textContent = calcFmt(total);
   }
 
