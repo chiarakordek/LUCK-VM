@@ -236,6 +236,11 @@ const FirebaseDB = (() => {
       await db.collection(SECCIONES_COL).doc(doc.id).delete();
     }
 
+    const filSnapshot = await db.collection(FILAMENTOS_COL).get();
+    for (const doc of filSnapshot.docs) {
+      await db.collection(FILAMENTOS_COL).doc(doc.id).delete();
+    }
+
     const defaultData = typeof CATALOGO_DATA !== 'undefined' ? CATALOGO_DATA : null;
     if (!defaultData) throw new Error('CATALOGO_DATA no encontrado');
 
@@ -247,7 +252,9 @@ const FirebaseDB = (() => {
       });
     }
 
-    await seedFilamentos();
+    for (const f of FILAMENTOS_DEFAULT) {
+      await addFilamento({ ...f, gramosActuales: 1000, gramosMax: 1000, gramosMin: 200 });
+    }
   }
 
   // ===== PEDIDOS =====
