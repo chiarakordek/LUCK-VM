@@ -980,6 +980,7 @@
       try {
         await FirebaseDB.resetCatalogo();
         secciones = await FirebaseDB.getSecciones();
+        filamentos = await FirebaseDB.getFilamentos();
         renderDashboard();
         renderProductsTable();
         renderSectionsTable();
