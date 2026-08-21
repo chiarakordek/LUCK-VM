@@ -5,6 +5,7 @@
   const $$ = (sel) => document.querySelectorAll(sel);
 
   let secciones = [];
+  let filamentos = [];
   let appConfig = {};
 
   // ===== TOAST =====
@@ -77,6 +78,7 @@
   async function loadData() {
     try {
       secciones = await FirebaseDB.getSecciones();
+      filamentos = await FirebaseDB.getFilamentos();
       appConfig = await FirebaseDB.getConfig();
     } catch (e) {
       console.error('Error loading data:', e);
@@ -199,6 +201,21 @@
       `<option value="${s.id}" ${product && product._sectionId === s.id ? 'selected' : ''}>${s.nombre}</option>`
     ).join('');
 
+    const productFilamento = product?.filamento || [];
+    const filamentoRows = filamentos.map(f => {
+      const entry = productFilamento.find(pf => pf.filamentoId === f.id);
+      return `
+        <div class="fil-row" data-fil-id="${f.id}">
+          <span class="fil-swatch" style="background:${f.colorHex}"></span>
+          <span class="fil-name">${f.color}</span>
+          <input type="number" class="fil-grams-input" data-fil="${f.id}" value="${entry ? entry.gramos : 0}" min="0" placeholder="0">
+          <span class="fil-unit">g</span>
+        </div>
+      `;
+    }).join('');
+
+    const totalGrams = productFilamento.reduce((s, f) => s + (f.gramos || 0), 0);
+
     const formHtml = `
       <div class="form-group">
         <label>Nombre</label>
@@ -210,15 +227,15 @@
       </div>
       <div class="form-group">
         <label>Descripción (cómo se usa / cómo se juega)</label>
-        <textarea id="formDesc">${product?.descripcion || product?.descripcionCorta || ''}</textarea>
+        <textarea id="formDesc">${product?.descripcion || ''}</textarea>
       </div>
       <div class="form-group">
         <label>Ruta de imagen</label>
         <input type="text" id="formImagen" value="${product?.imagen || 'images/'}" placeholder="images/archivo.png">
       </div>
       <div class="form-group">
-        <label>Gramos de filamento</label>
-        <input type="number" id="formFilamentoGrams" value="${product?.filamentoGrams || 0}" min="0" placeholder="0">
+        <label>Filamento por producto <span id="formFilTotal" style="color:var(--accent);font-weight:600;">(${totalGrams}g total)</span></label>
+        <div class="fil-grid">${filamentoRows}</div>
       </div>
       <div class="form-actions">
         <button class="btn-primary" id="formSave">${isEdit ? 'Guardar cambios' : 'Crear producto'}</button>
@@ -233,6 +250,14 @@
       $('#formSeccion').value = product._sectionId;
     }
 
+    document.querySelectorAll('.fil-grams-input').forEach(inp => {
+      inp.addEventListener('input', () => {
+        let total = 0;
+        document.querySelectorAll('.fil-grams-input').forEach(i => total += parseInt(i.value) || 0);
+        $('#formFilTotal').textContent = `(${total}g total)`;
+      });
+    });
+
     $('#formCancel').addEventListener('click', closeForm);
     $('#modalFormOverlay').addEventListener('click', (e) => {
       if (e.target === e.currentTarget) closeForm();
@@ -243,18 +268,25 @@
       const seccionId = $('#formSeccion').value;
       const desc = $('#formDesc').value;
       const imagen = $('#formImagen').value;
-      const filamentoGrams = parseInt($('#formFilamentoGrams').value) || 0;
 
       if (!nombre || !seccionId || !imagen) {
         showToast('Completá nombre, sección e imagen', true);
         return;
       }
 
+      const filamento = [];
+      document.querySelectorAll('.fil-grams-input').forEach(inp => {
+        const gramos = parseInt(inp.value) || 0;
+        if (gramos > 0) {
+          filamento.push({ filamentoId: inp.dataset.fil, gramos });
+        }
+      });
+
       const productData = {
         nombre,
         descripcion: desc,
         imagen,
-        filamentoGrams,
+        filamento,
         destacado: product?.destacado || false
       };
 
@@ -627,17 +659,22 @@
     container.innerHTML = pedidos.map(p => {
       const fecha = new Date(p.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
       const estadoClass = p.estado === 'pendiente' ? 'badge-pending' : p.estado === 'confirmado' ? 'badge-confirmed' : 'badge-cancelled';
-      const items = (p.items || []).map(item => `
+      const items = (p.items || []).map(item => {
+        const filDots = (item.filamento || []).map(f => {
+          const fil = filamentos.find(fi => fi.id === f.filamentoId);
+          return fil ? `<span class="fil-swatch-sm" style="background:${fil.colorHex}" title="${fil.color}: ${f.gramos}g"></span>` : '';
+        }).join('');
+        return `
         <div class="pedido-item">
           <span class="pedido-item-name">${item.nombre}</span>
           <span class="pedido-item-qty">x${item.cantidad}</span>
-          <span class="pedido-item-grams">${item.filamentoGrams || 0}g</span>
+          <span class="pedido-item-grams">${filDots}</span>
           <div class="pedido-item-controls">
             <button class="qty-btn-sm" data-pedido="${p.id}" data-item-idx="${(p.items || []).indexOf(item)}" data-action="minus">−</button>
             <button class="qty-btn-sm" data-pedido="${p.id}" data-item-idx="${(p.items || []).indexOf(item)}" data-action="plus">+</button>
           </div>
         </div>
-      `).join('');
+      `}).join('');
 
       return `
         <div class="pedido-card">
@@ -647,7 +684,6 @@
           </div>
           <div class="pedido-items">${items}</div>
           <div class="pedido-footer">
-            <span class="pedido-total-grams">Total filamento: <strong>${p.totalFilamento || 0}g</strong></span>
             <div class="pedido-actions">
               <button class="btn-secondary btn-sm" data-pedido-delete="${p.id}">Eliminar</button>
               ${p.estado === 'pendiente' ? `<button class="btn-primary btn-sm" data-pedido-confirm="${p.id}">Confirmar</button>` : ''}
@@ -668,11 +704,7 @@
         if (action === 'plus') pedido.items[idx].cantidad++;
         if (action === 'minus' && pedido.items[idx].cantidad > 1) pedido.items[idx].cantidad--;
 
-        const product = findProduct(pedido.items[idx].id);
-        pedido.items[idx].filamentoGrams = product?.filamentoGrams || 0;
-        pedido.totalFilamento = pedido.items.reduce((sum, item) => sum + (item.filamentoGrams * item.cantidad), 0);
-
-        await FirebaseDB.updatePedido(pedidoId, { items: pedido.items, totalFilamento: pedido.totalFilamento });
+        await FirebaseDB.updatePedido(pedidoId, { items: pedido.items });
         renderPedidosPage();
       });
     });
@@ -683,16 +715,19 @@
         const pedido = pedidos.find(p => p.id === pedidoId);
         if (!pedido) return;
 
-        const stock = await FirebaseDB.getStock();
-        if (stock.actual < (pedido.totalFilamento || 0)) {
-          showToast('Stock insuficiente para confirmar este pedido', true);
-          return;
+        try {
+          const errores = await FirebaseDB.deductFilamentoStock(pedido.items, pedidoId);
+          await FirebaseDB.updatePedido(pedidoId, { estado: 'confirmado' });
+          if (errores.length > 0) {
+            showToast('Pedido confirmado, pero: ' + errores.join('; '), true);
+          } else {
+            showToast('Pedido confirmado y stock descontado por color');
+          }
+          filamentos = await FirebaseDB.getFilamentos();
+          renderPedidosPage();
+        } catch (e) {
+          showToast('Error: ' + e.message, true);
         }
-
-        await FirebaseDB.updatePedido(pedidoId, { estado: 'confirmado' });
-        await FirebaseDB.updateStock(-(pedido.totalFilamento || 0), `Pedido confirmado - ${pedido.items.map(i => i.nombre).join(', ')}`);
-        showToast('Pedido confirmado y stock descontado');
-        renderPedidosPage();
       });
     });
 
@@ -706,96 +741,219 @@
     });
   }
 
-  // ===== STOCK =====
+  // ===== STOCK / FILAMENTOS =====
   async function renderStockPage() {
     const container = document.getElementById('stockContent');
     if (!container) return;
-    container.innerHTML = '<p style="color:var(--text-muted);">Cargando stock...</p>';
+    container.innerHTML = '<p style="color:var(--text-muted);">Cargando inventario...</p>';
 
-    let stock;
     try {
-      stock = await FirebaseDB.getStock();
+      filamentos = await FirebaseDB.getFilamentos();
     } catch (e) {
-      container.innerHTML = '<p style="color:var(--danger);">Error al cargar stock</p>';
+      container.innerHTML = '<p style="color:var(--danger);">Error al cargar filamentos</p>';
       return;
     }
 
-    const isLow = stock.actual <= stock.minimo;
-    const historial = (stock.historial || []).slice(0, 20);
+    if (filamentos.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <p>No hay filamentos cargados.</p>
+          <button class="btn-primary" id="btnSeedFil">Cargar filamentos BambuLab (11 colores)</button>
+        </div>
+      `;
+      document.getElementById('btnSeedFil')?.addEventListener('click', async () => {
+        await FirebaseDB.seedFilamentos();
+        showToast('11 filamentos BambuLab cargados');
+        renderStockPage();
+      });
+      return;
+    }
+
+    const totalGrams = filamentos.reduce((s, f) => s + (f.gramosActuales || 0), 0);
+    const lowStock = filamentos.filter(f => (f.gramosActuales || 0) <= (f.gramosMin || 0));
 
     container.innerHTML = `
-      <div class="stock-summary ${isLow ? 'stock-low' : ''}">
+      <div class="stock-summary ${lowStock.length > 0 ? 'stock-low' : ''}">
         <div class="stock-current">
-          <span class="stock-label">Stock actual</span>
-          <span class="stock-value">${stock.actual}g</span>
-          ${isLow ? '<span class="stock-alert">STOCK BAJO</span>' : ''}
+          <span class="stock-label">Total en inventario</span>
+          <span class="stock-value">${(totalGrams / 1000).toFixed(1)}kg</span>
+          <span class="stock-sub">${totalGrams}g · ${filamentos.length} rollos</span>
         </div>
-        <div class="stock-min">
-          <span class="stock-label">Mínimo</span>
-          <span class="stock-value-sm">${stock.minimo}g</span>
-        </div>
+        ${lowStock.length > 0 ? `<div class="stock-alert">STOCK BAJO: ${lowStock.map(f => f.color).join(', ')}</div>` : ''}
       </div>
 
-      <div class="stock-controls">
-        <div class="stock-add">
-          <h3>Agregar filamento (compra)</h3>
-          <div class="stock-input-row">
-            <input type="number" id="stockAddGrams" placeholder="Gramos" min="0">
-            <button class="btn-primary" id="btnStockAdd">+ Agregar</button>
-          </div>
-        </div>
-        <div class="stock-subtract">
-          <h3>Configurar mínimo</h3>
-          <div class="stock-input-row">
-            <input type="number" id="stockMinInput" value="${stock.minimo}" min="0">
-            <button class="btn-secondary" id="btnStockMin">Guardar</button>
-          </div>
-        </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h3 style="margin:0;">Inventario de Filamentos</h3>
+        <button class="btn-primary" id="btnAddFil">+ Agregar filamento</button>
       </div>
 
-      <div class="stock-history">
-        <h3>Historial</h3>
-        ${historial.length === 0 ? '<p style="color:var(--text-muted);">Sin movimientos aún</p>' : `
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Movimiento</th>
-                <th>Motivo</th>
-                <th>Saldo</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${historial.map(h => {
-                const fecha = new Date(h.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                const cls = h.cambio > 0 ? 'stock-in' : 'stock-out';
-                return `<tr>
-                  <td>${fecha}</td>
-                  <td class="${cls}">${h.cambio > 0 ? '+' : ''}${h.cambio}g</td>
-                  <td>${h.motivo}</td>
-                  <td>${h.saldo}g</td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        `}
+      <div class="fil-inventory-grid">
+        ${filamentos.map(f => {
+          const pct = f.gramosMax ? Math.round((f.gramosActuales / f.gramosMax) * 100) : 0;
+          const isLow = (f.gramosActuales || 0) <= (f.gramosMin || 0);
+          return `
+            <div class="fil-card ${isLow ? 'fil-low' : ''}">
+              <div class="fil-card-header">
+                <span class="fil-swatch-lg" style="background:${f.colorHex}"></span>
+                <div class="fil-card-info">
+                  <strong>${f.color}</strong>
+                  <span class="fil-card-type">${f.marca} ${f.tipo}</span>
+                </div>
+              </div>
+              <div class="fil-card-bar">
+                <div class="fil-bar-fill" style="width:${pct}%;background:${isLow ? 'var(--danger)' : f.colorHex}"></div>
+              </div>
+              <div class="fil-card-stats">
+                <span>${f.gramosActuales}g / ${f.gramosMax}g</span>
+                <span>${pct}%</span>
+              </div>
+              <div class="fil-card-actions">
+                <button class="btn-secondary btn-sm" data-fil-add="${f.id}" title="Agregar stock">+ Stock</button>
+                <button class="btn-secondary btn-sm" data-fil-min="${f.id}" title="Configurar mínimo">Mín</button>
+                <button class="btn-sm" style="color:var(--danger);background:none;border:none;cursor:pointer;" data-fil-del="${f.id}" title="Eliminar">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <div class="stock-history" style="margin-top:24px;">
+        <h3>Historial reciente</h3>
+        ${renderFilamentoHistory()}
       </div>
     `;
 
-    document.getElementById('btnStockAdd').addEventListener('click', async () => {
-      const grams = parseInt(document.getElementById('stockAddGrams').value) || 0;
-      if (grams <= 0) { showToast('Ingresá una cantidad válida', true); return; }
-      await FirebaseDB.updateStock(grams, 'Compra de filamento');
-      showToast(`+${grams}g agregados al stock`);
-      renderStockPage();
+    container.querySelectorAll('[data-fil-add]').forEach(btn => {
+      btn.addEventListener('click', () => promptFilamentoStock(btn.dataset.filAdd));
     });
+    container.querySelectorAll('[data-fil-min]').forEach(btn => {
+      btn.addEventListener('click', () => promptFilamentoMin(btn.dataset.filMin));
+    });
+    container.querySelectorAll('[data-fil-del]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('¿Eliminar este filamento?')) return;
+        await FirebaseDB.deleteFilamento(btn.dataset.filDel);
+        showToast('Filamento eliminado');
+        renderStockPage();
+      });
+    });
+    document.getElementById('btnAddFil')?.addEventListener('click', () => openFilamentoForm());
+  }
 
-    document.getElementById('btnStockMin').addEventListener('click', async () => {
-      const min = parseInt(document.getElementById('stockMinInput').value) || 0;
-      stock.minimo = min;
-      await FirebaseDB.saveStock(stock);
-      showToast('Mínimo actualizado');
+  function renderFilamentoHistory() {
+    const allHistory = [];
+    filamentos.forEach(f => {
+      (f.historial || []).forEach(h => {
+        allHistory.push({ ...h, color: f.color, colorHex: f.colorHex });
+      });
+    });
+    allHistory.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    const recent = allHistory.slice(0, 20);
+
+    if (recent.length === 0) return '<p style="color:var(--text-muted);">Sin movimientos aún</p>';
+
+    return `
+      <table class="data-table">
+        <thead><tr><th>Fecha</th><th>Filamento</th><th>Movimiento</th><th>Motivo</th><th>Saldo</th></tr></thead>
+        <tbody>
+          ${recent.map(h => {
+            const fecha = new Date(h.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+            const cls = h.cambio > 0 ? 'stock-in' : 'stock-out';
+            return `<tr>
+              <td>${fecha}</td>
+              <td><span class="fil-swatch-sm" style="background:${h.colorHex}"></span> ${h.color}</td>
+              <td class="${cls}">${h.cambio > 0 ? '+' : ''}${h.cambio}g</td>
+              <td>${h.motivo}</td>
+              <td>${h.saldo}g</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  async function promptFilamentoStock(filId) {
+    const fil = filamentos.find(f => f.id === filId);
+    if (!fil) return;
+    const gramos = prompt(`¿Cuántos gramos agregar a ${fil.color}?`, '1000');
+    if (!gramos || parseInt(gramos) <= 0) return;
+    await FirebaseDB.addFilamentoStock(filId, parseInt(gramos), 'Compra de filamento');
+    showToast(`+${gramos}g agregados a ${fil.color}`);
+    renderStockPage();
+  }
+
+  async function promptFilamentoMin(filId) {
+    const fil = filamentos.find(f => f.id === filId);
+    if (!fil) return;
+    const min = prompt(`Mínimo en gramos para ${fil.color}:`, fil.gramosMin || 200);
+    if (!min || parseInt(min) < 0) return;
+    await FirebaseDB.updateFilamento(filId, { gramosMin: parseInt(min) });
+    showToast(`Mínimo de ${fil.color} actualizado`);
+    renderStockPage();
+  }
+
+  function openFilamentoForm() {
+    $('#modalFormTitle').textContent = 'Nuevo filamento';
+    $('#modalFormContent').innerHTML = `
+      <div class="form-group">
+        <label>Marca</label>
+        <input type="text" id="filMarca" value="BambuLab">
+      </div>
+      <div class="form-group">
+        <label>Tipo</label>
+        <input type="text" id="filTipo" value="PLA Basic">
+      </div>
+      <div class="form-group">
+        <label>Color</label>
+        <input type="text" id="filColor" placeholder="ej: Jet Black">
+      </div>
+      <div class="form-group">
+        <label>Color HEX</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="color" id="filColorPicker" value="#888888">
+          <input type="text" id="filColorHex" value="#888888" style="width:100px;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Gramos actuales</label>
+        <input type="number" id="filGramos" value="1000" min="0">
+      </div>
+      <div class="form-group">
+        <label>Máximo (capacidad del rollo)</label>
+        <input type="number" id="filMax" value="1000" min="0">
+      </div>
+      <div class="form-group">
+        <label>Mínimo (alerta)</label>
+        <input type="number" id="filMin" value="200" min="0">
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" id="filSave">Crear filamento</button>
+        <button class="btn-secondary" id="formCancel">Cancelar</button>
+      </div>
+    `;
+    $('#modalFormOverlay').classList.add('active');
+
+    $('#filColorPicker').addEventListener('input', (e) => { $('#filColorHex').value = e.target.value; });
+    $('#filColorHex').addEventListener('input', (e) => { $('#filColorPicker').value = e.target.value; });
+    $('#formCancel').addEventListener('click', closeForm);
+    $('#modalFormOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeForm(); });
+
+    $('#filSave').addEventListener('click', async () => {
+      const color = $('#filColor').value.trim();
+      if (!color) { showToast('Ingresá un nombre de color', true); return; }
+      await FirebaseDB.addFilamento({
+        marca: $('#filMarca').value.trim(),
+        tipo: $('#filTipo').value.trim(),
+        color,
+        colorHex: $('#filColorHex').value,
+        gramosActuales: parseInt($('#filGramos').value) || 1000,
+        gramosMax: parseInt($('#filMax').value) || 1000,
+        gramosMin: parseInt($('#filMin').value) || 200
+      });
+      filamentos = await FirebaseDB.getFilamentos();
+      closeForm();
       renderStockPage();
+      showToast(`Filamento "${color}" creado`);
     });
   }
 

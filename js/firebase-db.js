@@ -3,6 +3,8 @@ const FirebaseDB = (() => {
 
   const CONFIG_DOC = 'config';
   const SECCIONES_COL = 'secciones';
+  const FILAMENTOS_COL = 'filamentos';
+  const PEDIDOS_COL = 'pedidos';
 
   // ===== CONFIG =====
   async function getConfig() {
@@ -98,6 +100,102 @@ const FirebaseDB = (() => {
     await toRef.update({ productos: toProductos });
   }
 
+  // ===== FILAMENTOS =====
+  const FILAMENTOS_DEFAULT = [
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Jet Black', colorHex: '#1a1a1a' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Lily White', colorHex: '#f0f0f0' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Scarlet Red', colorHex: '#cc2222' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'True Blue', colorHex: '#2255cc' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Grass Green', colorHex: '#22aa44' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Lemon Yellow', colorHex: '#ddcc22' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Sun Orange', colorHex: '#ee7722' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Sakura Pink', colorHex: '#ee66aa' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Concrete Gray', colorHex: '#888888' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Chocolate Brown', colorHex: '#885533' },
+    { marca: 'BambuLab', tipo: 'PLA Basic', color: 'Lavender Purple', colorHex: '#8844cc' }
+  ];
+
+  async function getFilamentos() {
+    const snapshot = await db.collection(FILAMENTOS_COL).orderBy('color').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async function addFilamento(data) {
+    const ref = await db.collection(FILAMENTOS_COL).add({
+      marca: data.marca || 'BambuLab',
+      tipo: data.tipo || 'PLA Basic',
+      color: data.color,
+      colorHex: data.colorHex || '#cccccc',
+      gramosActuales: data.gramosActuales || 1000,
+      gramosMax: data.gramosMax || 1000,
+      gramosMin: data.gramosMin || 200,
+      historial: []
+    });
+    return ref.id;
+  }
+
+  async function updateFilamento(id, data) {
+    await db.collection(FILAMENTOS_COL).doc(id).update(data);
+  }
+
+  async function deleteFilamento(id) {
+    await db.collection(FILAMENTOS_COL).doc(id).delete();
+  }
+
+  async function addFilamentoStock(id, gramos, motivo) {
+    const ref = db.collection(FILAMENTOS_COL).doc(id);
+    const doc = await ref.get();
+    if (!doc.exists) throw new Error('Filamento no encontrado');
+
+    const fil = doc.data();
+    const nuevoActual = Math.min((fil.gramosActuales || 0) + gramos, fil.gramosMax || 1000);
+    const historial = fil.historial || [];
+    historial.unshift({
+      cambio: gramos,
+      motivo: motivo || 'Compra de filamento',
+      fecha: new Date().toISOString(),
+      saldo: nuevoActual
+    });
+    if (historial.length > 50) historial.length = 50;
+
+    await ref.update({ gramosActuales: nuevoActual, historial });
+    return { ...fil, gramosActuales: nuevoActual };
+  }
+
+  async function deductFilamentoStock(items, pedidoId) {
+    const filamentosUsados = {};
+
+    for (const item of items) {
+      for (const f of (item.filamento || [])) {
+        const key = f.filamentoId;
+        if (!key) continue;
+        filamentosUsados[key] = (filamentosUsados[key] || 0) + (f.gramos * (item.cantidad || 1));
+      }
+    }
+
+    const errores = [];
+    for (const [filId, totalGrams] of Object.entries(filamentosUsados)) {
+      const ref = db.collection(FILAMENTOS_COL).doc(filId);
+      const doc = await ref.get();
+      if (!doc.exists) { errores.push(`Filamento ${filId} no encontrado`); continue; }
+
+      const fil = doc.data();
+      const nuevoActual = Math.max(0, (fil.gramosActuales || 0) - totalGrams);
+      const historial = fil.historial || [];
+      historial.unshift({
+        cambio: -totalGrams,
+        motivo: `Pedido ${pedidoId || 'confirmado'}`,
+        fecha: new Date().toISOString(),
+        saldo: nuevoActual
+      });
+      if (historial.length > 50) historial.length = 50;
+
+      await ref.update({ gramosActuales: nuevoActual, historial });
+    }
+
+    return errores;
+  }
+
   // ===== SEED DATA (primera vez) =====
   async function seedData() {
     const snapshot = await db.collection(SECCIONES_COL).limit(1).get();
@@ -119,7 +217,16 @@ const FirebaseDB = (() => {
       catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: '' }
     });
 
-    await saveStock({ actual: 1000, minimo: 300, historial: [] });
+    await seedFilamentos();
+  }
+
+  async function seedFilamentos() {
+    const snapshot = await db.collection(FILAMENTOS_COL).limit(1).get();
+    if (!snapshot.empty) return;
+
+    for (const f of FILAMENTOS_DEFAULT) {
+      await addFilamento({ ...f, gramosActuales: 1000, gramosMax: 1000, gramosMin: 200 });
+    }
   }
 
   // ===== RESET CATALOGO (borrar y re-seedear) =====
@@ -139,11 +246,11 @@ const FirebaseDB = (() => {
         productos: sec.productos
       });
     }
+
+    await seedFilamentos();
   }
 
   // ===== PEDIDOS =====
-  const PEDIDOS_COL = 'pedidos';
-
   async function savePedido(pedido) {
     const ref = await db.collection(PEDIDOS_COL).add({
       ...pedido,
@@ -170,36 +277,6 @@ const FirebaseDB = (() => {
     await db.collection(PEDIDOS_COL).doc(id).delete();
   }
 
-  // ===== STOCK =====
-  const STOCK_DOC = 'stock';
-
-  async function getStock() {
-    try {
-      const doc = await db.collection('admin').doc(STOCK_DOC).get();
-      if (doc.exists) return doc.data();
-    } catch (e) { /* ignore */ }
-    return { actual: 1000, minimo: 300, historial: [] };
-  }
-
-  async function saveStock(data) {
-    await db.collection('admin').doc(STOCK_DOC).set(data, { merge: true });
-  }
-
-  async function updateStock(gramos, motivo) {
-    const stock = await getStock();
-    stock.actual = Math.max(0, stock.actual + gramos);
-    stock.historial = stock.historial || [];
-    stock.historial.unshift({
-      cambio: gramos,
-      motivo: motivo || (gramos > 0 ? 'Compra de filamento' : 'Pedido despachado'),
-      fecha: new Date().toISOString(),
-      saldo: stock.actual
-    });
-    if (stock.historial.length > 100) stock.historial = stock.historial.slice(0, 100);
-    await saveStock(stock);
-    return stock;
-  }
-
   return {
     getConfig,
     saveConfig,
@@ -211,14 +288,18 @@ const FirebaseDB = (() => {
     updateProducto,
     deleteProducto,
     moveProducto,
+    getFilamentos,
+    addFilamento,
+    updateFilamento,
+    deleteFilamento,
+    addFilamentoStock,
+    deductFilamentoStock,
+    seedFilamentos,
     seedData,
     resetCatalogo,
     savePedido,
     getPedidos,
     updatePedido,
-    deletePedido,
-    getStock,
-    saveStock,
-    updateStock
+    deletePedido
   };
 })();

@@ -261,16 +261,13 @@
         id: item.id,
         nombre: product?.nombre || item.id,
         cantidad: item.cantidad,
-        filamentoGrams: product?.filamentoGrams || 0
+        filamento: product?.filamento || []
       };
     });
-
-    const totalFilamento = items.reduce((sum, item) => sum + (item.filamentoGrams * item.cantidad), 0);
 
     try {
       await FirebaseDB.savePedido({
         items,
-        totalFilamento,
         cliente: 'WhatsApp'
       });
     } catch (e) {
