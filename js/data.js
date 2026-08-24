@@ -638,6 +638,30 @@ const CATALOGO_DATA = {
           imagen: "images/soporte-celuar-compartimientoinferior.png",
           filamento: [],
           destacado: false
+        },
+        {
+          id: "soporte-lentes",
+          nombre: "Soporte para Lentes",
+          descripcion: "Soporte para lentes de sol o lectura con base estable.",
+          imagen: "images/soporte-lentes.jpeg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "soporte-lentes-cara",
+          nombre: "Soporte para Lentes Forma de Cara",
+          descripcion: "Soporte decorativo para lentes con forma de cara.",
+          imagen: "images/soporte-cara-lente.jpeg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "soporte-lentes-pie",
+          nombre: "Soporte para Lentes de Pie",
+          descripcion: "Soporte de pie para lentes con base estable y diseño elegante.",
+          imagen: "images/soporte-pie-lentes.jpeg",
+          filamento: [],
+          destacado: false
         }
       ]
     },
@@ -711,8 +735,71 @@ const CATALOGO_DATA = {
           destacado: false
         }
       ]
+    },
+    {
+      id: "mascotas",
+      nombre: "Mascotas",
+      orden: 9,
+      productos: [
+        {
+          id: "comedero-gato-automatico",
+          nombre: "Comedero Automático para Gato",
+          descripcion: "Comedero automático con dispensador programable para gatos.",
+          imagen: "images/comedero-gato-automatico.jpeg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "comedero-gato-perro",
+          nombre: "Comedero para Gato y Perro",
+          descripcion: "Comedero doble para gato y perro con compartimentos individuales.",
+          imagen: "images/comedero-gato-perro.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "comedero-perro-automatico",
+          nombre: "Comedero Automático para Perro",
+          descripcion: "Comedero automático con dispensador para perros.",
+          imagen: "images/comedero-perro-automatico.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "juego-gato-pelota",
+          nombre: "Juego para Gato con Pelota",
+          descripcion: "Juego interactivo con pelota para gatos.",
+          imagen: "images/juego-gato-pelota.jpeg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "juego-gato-doblepelota",
+          nombre: "Juego para Gato Doble Pelota",
+          descripcion: "Juego interactivo con doble pelota para gatos.",
+          imagen: "images/juego-gato-doblepelota.jpeg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "pala-excrementos",
+          nombre: "Pala para Excrementos con Soporte de Bolsa",
+          descripcion: "Pala para excrementos con soporte integrado para bolsa.",
+          imagen: "images/pala-excrementos-soporte-bolsa.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "soporte-pared-comedero",
+          nombre: "Soporte de Pared para Comedero / Bebedero Animal",
+          descripcion: "Soporte de pared para comedero o bebedero de mascotas.",
+          imagen: "images/soporte-pared-comedero-bebedero-animal.jpeg",
+          filamento: [],
+          destacado: false
+        }
+      ]
     }
   ],
-  version: "1.2.0",
+  version: "1.3.0",
   ultimaActualizacion: new Date().toISOString()
 };
