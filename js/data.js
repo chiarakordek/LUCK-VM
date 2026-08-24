@@ -3,7 +3,7 @@ const CATALOGO_DATA = {
     {
       id: "juegos-mesa",
       nombre: "Juegos de Mesa",
-      orden: 1,
+      orden: 6,
       productos: [
         {
           id: "tetris-balance",
@@ -170,7 +170,7 @@ const CATALOGO_DATA = {
     {
       id: "llaveros",
       nombre: "Llaveros",
-      orden: 2,
+      orden: 7,
       productos: [
         {
           id: "llavero-chocolate",
@@ -249,7 +249,7 @@ const CATALOGO_DATA = {
     {
       id: "fidget",
       nombre: "Fidget",
-      orden: 3,
+      orden: 4,
       productos: [
         {
           id: "pad-fidget-9",
@@ -296,7 +296,7 @@ const CATALOGO_DATA = {
     {
       id: "pokemon",
       nombre: "Pokémon",
-      orden: 4,
+      orden: 9,
       productos: [
         {
           id: "caja-pokemon",
@@ -327,7 +327,7 @@ const CATALOGO_DATA = {
     {
       id: "comida",
       nombre: "Comida",
-      orden: 5,
+      orden: 3,
       productos: [
         {
           id: "fideos-sensorial",
@@ -382,7 +382,7 @@ const CATALOGO_DATA = {
     {
       id: "bazar",
       nombre: "Bazar",
-      orden: 6,
+      orden: 1,
       productos: [
         {
           id: "molde-sorrentino",
@@ -581,7 +581,7 @@ const CATALOGO_DATA = {
     {
       id: "hogar",
       nombre: "Hogar",
-      orden: 7,
+      orden: 5,
       productos: [
         {
           id: "soporte-celular",
@@ -668,7 +668,7 @@ const CATALOGO_DATA = {
     {
       id: "cajas-cestas",
       nombre: "Cajas y Cestas",
-      orden: 8,
+      orden: 2,
       productos: [
         {
           id: "cesta-regalo",
@@ -739,7 +739,7 @@ const CATALOGO_DATA = {
     {
       id: "mascotas",
       nombre: "Mascotas",
-      orden: 9,
+      orden: 8,
       productos: [
         {
           id: "comedero-gato-automatico",
