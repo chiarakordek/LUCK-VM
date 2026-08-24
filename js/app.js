@@ -3,10 +3,11 @@
 
   let cart = JSON.parse(localStorage.getItem('luckvm_cart')) || [];
   let secciones = [];
-  let appConfig = { whatsapp: { numero: '5493535630595' }, catalogo: { nombre: 'Luck VM', subtitulo: '', videoUrl: '' }, costoGramo: 25, markup: 3 };
+  let appConfig = { whatsapp: { numero: '5493535630595' }, catalogo: { nombre: 'Luck VM', subtitulo: '', videoUrl: 'https://www.youtube.com/embed/YoSYnbQqkGg' }, costoGramo: 25, markup: 3 };
   let currentProduct = null;
   let currentQty = 1;
   let activeSection = 'all';
+  const IMG_V = '?v=2';
 
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
@@ -94,7 +95,7 @@
   function renderCard(product) {
     return `
       <div class="product-card" data-product-id="${product.id}">
-        <img class="card-image" src="${product.imagen}" alt="${product.nombre}" loading="lazy">
+        <img class="card-image" src="${product.imagen}${IMG_V}" alt="${product.nombre}" loading="lazy">
         <div class="card-body">
           <h3 class="card-name">${product.nombre}</h3>
           <p class="card-desc">${product.descripcion}</p>
@@ -150,7 +151,7 @@
     currentProduct = product;
     currentQty = 1;
 
-    $('#modalImage').src = product.imagen;
+    $('#modalImage').src = product.imagen + IMG_V;
     $('#modalImage').alt = product.nombre;
     $('#modalName').textContent = product.nombre;
     $('#modalDesc').textContent = product.descripcion;
@@ -227,7 +228,7 @@
       const el = document.createElement('div');
       el.className = 'cart-item';
       el.innerHTML = `
-        <img class="cart-item-img" src="${product.imagen}" alt="${product.nombre}">
+        <img class="cart-item-img" src="${product.imagen}${IMG_V}" alt="${product.nombre}">
         <div class="cart-item-info">
           <div class="cart-item-name">${product.nombre}</div>
           <div class="cart-item-qty">Cantidad: ${item.cantidad}</div>

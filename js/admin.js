@@ -147,7 +147,7 @@
         const precioStr = totalG > 0 ? `$${precio.toLocaleString('es-AR')}` : '-';
         rows += `
           <tr>
-            <td><img class="col-img" src="${p.imagen}" alt="${p.nombre}"></td>
+            <td><img class="col-img" src="${p.imagen}?v=2" alt="${p.nombre}"></td>
             <td><strong>${p.nombre}</strong><br><span style="color:var(--text-muted);font-size:0.8rem;">${sec.nombre}</span></td>
             <td style="text-align:center;font-weight:700;color:var(--accent);">${precioStr}</td>
             <td class="col-actions">

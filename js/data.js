@@ -263,7 +263,7 @@ const CATALOGO_DATA = {
           id: "estrella-espiral",
           nombre: "Estrella Geométrica Espiral",
           descripcion: "Anillos concéntricos en forma de estrella que se despliegan telescópicamente.",
-          imagen: "images/estrella-espiral.png",
+          imagen: "images/estrella-espiral.jpg",
           filamento: [],
           destacado: false
         },
@@ -279,7 +279,7 @@ const CATALOGO_DATA = {
           id: "cubo-infinito",
           nombre: "Cubo Infinito Texturizado",
           descripcion: "Ocho cubos con bisagras que se pliegan y despliegan de forma continua.",
-          imagen: "images/cubo-infinito.png",
+          imagen: "images/cubo-infinito.jpg",
           filamento: [],
           destacado: false
         },
