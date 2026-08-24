@@ -368,7 +368,14 @@ const CATALOGO_DATA = {
           imagen: "images/choclo.png",
           filamento: [],
           destacado: false
-        },
+        }
+      ]
+    },
+    {
+      id: "bazar",
+      nombre: "Bazar",
+      orden: 6,
+      productos: [
         {
           id: "molde-sorrentino",
           nombre: "Molde para Sorrentinos",
@@ -401,21 +408,6 @@ const CATALOGO_DATA = {
           filamento: [],
           destacado: false
         },
-        {
-          id: "pinza-pesca",
-          nombre: "Pinza de Pesca para Insectos",
-          descripcion: "Herramienta de pinza extensible con mecanismo de resorte para atrapar insectos sin dañarlos. Ideal para niños curiosos, exploración educativa y observación de la naturaleza.",
-          imagen: "images/pesca.png",
-          filamento: [],
-          destacado: false
-        }
-      ]
-    },
-    {
-      id: "hogar",
-      nombre: "Hogar",
-      orden: 6,
-      productos: [
         {
           id: "basurero-escritorio",
           nombre: "Basurero de Escritorio",
@@ -465,62 +457,6 @@ const CATALOGO_DATA = {
           destacado: false
         },
         {
-          id: "soporte-celular",
-          nombre: "Soporte para Celular Ajustable",
-          descripcion: "Base estable con soporte regulable en ángulo para smartphones. Alcohróndico antideslizante, plegable para transportar y compatible con todos los tamaños de pantalla.",
-          imagen: "images/soporte-celular.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "soporte-celular2",
-          nombre: "Soporte para Celular Ergonómico",
-          descripcion: "Soporte con diseño ergonómico inclinado para ver contenido sin cargar el cuello. Base antideslizante reforzada, ranura para cable de carga y acabado premium.",
-          imagen: "images/soporte-celular2.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "soporte-notebook",
-          nombre: "Soporte para Notebook Elevado",
-          descripcion: "Elevador ergonómico que mejora la ventilación del portátil y la postura al trabajar. Ajustable en altura y ángulo, plegable y resistente con base antideslizante.",
-          imagen: "images/soporte-notebook.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "soporte-notebook2",
-          nombre: "Soporte para Notebook Compacto",
-          descripcion: "Soporte plegable ultra compacto que cabe en cualquier mochila. Eleva la pantalla del notebook para una postura ergonómica, material resistente y diseño minimalista.",
-          imagen: "images/soporte-notebook2.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "soporte-monitor",
-          nombre: "Elevador de Monitor / Pantalla",
-          descripcion: "Base elevadora para monitores de escritorio que mejora la ergonomía visual. Superficie amplia antideslizante, diseño robusto y acabado elegante que combina con cualquier setup.",
-          imagen: "images/soporte-monitor.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "soporte-auto-celular",
-          nombre: "Soporte para Celular de Auto",
-          descripcion: "Soporte手机 con ventosa que se fija al parabrisas o dashboard. Compatible con smartphones de todos los tamaños, rotación 360° y brazo ajustable.",
-          imagen: "images/soporte-auto-celular.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "soporte-celular-inferior",
-          nombre: "Soporte Celular Compartimiento Inferior",
-          descripcion: "Soporte de celular con compartimiento oculto en la base para guardar accesorios, auriculares o dinero. Diseño discreto multifuncional.",
-          imagen: "images/soporte-celuar-compartimientoinferior.png",
-          filamento: [],
-          destacado: false
-        },
-        {
           id: "jabonera-desague",
           nombre: "Jabonera con Desagüe",
           descripcion: "Jabonera auto-drenante con superficie elevada y canaleta de escurrimiento que mantiene el jabón seco. Diseño higiénico con acabado mate antideslizante.",
@@ -557,6 +493,22 @@ const CATALOGO_DATA = {
           nombre: "Compartimiento para Huevos Versión 2",
           descripcion: "Segunda versión del organizador de huevos con capacidad ampliada y cierre superior. Mayor protección, diseño mejorado para heladeras grandes.",
           imagen: "images/compartimiento-huevos2.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "lavajilla-comida",
+          nombre: "Lavajilla Tipo Comida / Desperdicios",
+          descripcion: "Colador de desechos para lavabo con forma temática divertida. Filtro retenedor de residuos, fácil de limpiar y compatible con desagües estándar.",
+          imagen: "images/lavajilla-comida-desperdicios.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "cerradura-paquetes",
+          nombre: "Cerradura para Paquetes / buzón seguro",
+          descripcion: "Mecanismo de cierre seguro para buzones o cajas de paquetes. Sistema de pestillo reforzado que protege las entregas de delivery en tu casa.",
+          imagen: "images/cerradura-paquetes.png",
           filamento: [],
           destacado: false
         },
@@ -615,20 +567,67 @@ const CATALOGO_DATA = {
           imagen: "images/maceta4.png",
           filamento: [],
           destacado: false
-        },
+        }
+      ]
+    },
+    {
+      id: "hogar",
+      nombre: "Hogar",
+      orden: 7,
+      productos: [
         {
-          id: "lavajilla-comida",
-          nombre: "Lavajilla Tipo Comida / Desperdicios",
-          descripcion: "Colador de desechos para lavabo con forma temática divertida. Filtro retenedor de residuos, fácil de limpiar y compatible con desagües estándar.",
-          imagen: "images/lavajilla-comida-desperdicios.png",
+          id: "soporte-celular",
+          nombre: "Soporte para Celular Ajustable",
+          descripcion: "Base estable con soporte regulable en ángulo para smartphones. Alcohróndico antideslizante, plegable para transportar y compatible con todos los tamaños de pantalla.",
+          imagen: "images/soporte-celular.png",
           filamento: [],
           destacado: false
         },
         {
-          id: "cerradura-paquetes",
-          nombre: "Cerradura para Paquetes / buzón seguro",
-          descripcion: "Mecanismo de cierre seguro para buzones o cajas de paquetes. Sistema de pestillo reforzado que protege las entregas de delivery en tu casa.",
-          imagen: "images/cerradura-paquetes.png",
+          id: "soporte-celular2",
+          nombre: "Soporte para Celular Ergonómico",
+          descripcion: "Soporte con diseño ergonómico inclinado para ver contenido sin cargar el cuello. Base antideslizante reforzada, ranura para cable de carga y acabado premium.",
+          imagen: "images/soporte-celular2.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "soporte-notebook",
+          nombre: "Soporte para Notebook Elevado",
+          descripcion: "Elevador ergonómico que mejora la ventilación del portátil y la postura al trabajar. Ajustable en altura y ángulo, plegable y resistente con base antideslizante.",
+          imagen: "images/soporte-notebook.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "soporte-notebook2",
+          nombre: "Soporte para Notebook Compacto",
+          descripcion: "Soporte plegable ultra compacto que cabe en cualquier mochila. Eleva la pantalla del notebook para una postura ergonómica, material resistente y diseño minimalista.",
+          imagen: "images/soporte-notebook2.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "soporte-monitor",
+          nombre: "Elevador de Monitor / Pantalla",
+          descripcion: "Base elevadora para monitores de escritorio que mejora la ergonomía visual. Superficie amplia antideslizante, diseño robusto y acabado elegante que combina con cualquier setup.",
+          imagen: "images/soporte-monitor.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "soporte-auto-celular",
+          nombre: "Soporte para Celular de Auto",
+          descripcion: "Soporte con ventosa que se fija al parabrisas o dashboard. Compatible con smartphones de todos los tamaños, rotación 360° y brazo ajustable.",
+          imagen: "images/soporte-auto-celular.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "soporte-celular-inferior",
+          nombre: "Soporte Celular Compartimiento Inferior",
+          descripcion: "Soporte de celular con compartimiento oculto en la base para guardar accesorios, auriculares o dinero. Diseño discreto multifuncional.",
+          imagen: "images/soporte-celuar-compartimientoinferior.png",
           filamento: [],
           destacado: false
         }
