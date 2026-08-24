@@ -184,7 +184,7 @@ const CATALOGO_DATA = {
           id: "llavero-tnt",
           nombre: "Llavero Caja TNT Clicker",
           descripcion: "Llavero estilo pixel-art con switch mecánico táctil.",
-          imagen: "images/llaverofidget-minecraft.png",
+          imagen: "images/llaverofidget-minecraft.jpg",
           filamento: [],
           destacado: false
         },
@@ -271,7 +271,7 @@ const CATALOGO_DATA = {
           id: "engranaje-roller",
           nombre: "Engranaje Doble Rodillo (Gear Roller)",
           descripcion: "Dos cilindros dentados sincronizados que giran con fluidez entre los dedos.",
-          imagen: "images/engranaje-roller.png",
+          imagen: "images/engranaje-roller.jpg",
           filamento: [],
           destacado: false
         },
@@ -287,7 +287,7 @@ const CATALOGO_DATA = {
           id: "pinza-pesca",
           nombre: "Pinza de Pesca para Insectos",
           descripcion: "Pinza extensible con mecanismo de resorte para atrapar insectos sin dañarlos.",
-          imagen: "images/pesca.png",
+          imagen: "images/juego-pesca.png",
           filamento: [],
           destacado: false
         }
@@ -330,50 +330,50 @@ const CATALOGO_DATA = {
       orden: 5,
       productos: [
         {
-          id: "medialuna-flexible",
-          nombre: "Medialuna / Croissant Flexible",
-          descripcion: "Medialuna articulada que se ondula y flexiona de manera fluida.",
-          imagen: "images/medialunas.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "taza-magica",
-          nombre: "Taza Mágica con Chorro de Café Flotante",
-          descripcion: "Escultura suspendida que recrea el vertido de café con cascada articulada.",
-          imagen: "images/cafe.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "set-gourmet",
-          nombre: "Set Gourmet Sensorial: Pasta, Salsa & Tomates",
-          descripcion: "Set con bowl de pasta, fideos con salsa, tenedor y tomates antiestrés giratorios.",
-          imagen: "images/pasta1.png",
+          id: "fideos-sensorial",
+          nombre: "Set Fideos, Salsa, Tomate, Tenedor y Bowl Sensorial",
+          descripcion: "Set de comida sensorial con fideos, salsa, tomate, tenedor y bowl.",
+          imagen: "images/fideos-salsa-tomate-tenedor-bowl-sensorial.png",
           filamento: [],
           destacado: true
-        },
-        {
-          id: "huevo-frito",
-          nombre: "Huevo Frito Flexible Articulado",
-          descripcion: "Huevo frito que se dobla y amolda como una lámina elástica al levantarlo.",
-          imagen: "images/huevo.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "pata-pollo",
-          nombre: "Pata de Pollo con Escalera Desplegable",
-          descripcion: "Pata de pollo con escalera telescópica oculta que se despliega al deslizar el hueso.",
-          imagen: "images/pollo.png",
-          filamento: [],
-          destacado: false
         },
         {
           id: "choclo-sensorial",
           nombre: "Choclo / Mazorca Sensorial Flexible",
           descripcion: "Mazorca con granos articulados independientes que se mueven al deslizar los dedos.",
-          imagen: "images/choclo.png",
+          imagen: "images/choclo-sensorial.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "papas-huevo-pollo",
+          nombre: "Combo Papas, Huevo, Pollo y Sartén Sensorial",
+          descripcion: "Set de comida sensorial con papas fritas, huevo, pollo y sartén.",
+          imagen: "images/papas-huevo-pollo-sarten-sensorial.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "cade-medialuna",
+          nombre: "Cade Medialuna Antiestrés",
+          descripcion: "Medialuna artesanal en cade con efecto antiestrés.",
+          imagen: "images/cade-medialuna-antiestres.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "armar-donas",
+          nombre: "Armá tus Donas Sensorial",
+          descripcion: "Kit para armar donas con piezas sensoriales de colores.",
+          imagen: "images/armar-donas-sensorial.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "combo-cocina",
+          nombre: "Combo Cocina y Utensilios",
+          descripcion: "Set completo de utensilios de cocina para jugar y decorar.",
+          imagen: "images/combo-cocinautencillos.jpg",
           filamento: [],
           destacado: false
         }
@@ -388,7 +388,7 @@ const CATALOGO_DATA = {
           id: "molde-sorrentino",
           nombre: "Molde para Sorrentinos",
           descripcion: "Molde 3D para preparar sorrentinos artesanales con corte y sellado.",
-          imagen: "images/molde-sorrentino.png",
+          imagen: "images/molde-sorrentino.jpg",
           filamento: [],
           destacado: false
         },
@@ -396,7 +396,7 @@ const CATALOGO_DATA = {
           id: "molde-ravioles",
           nombre: "Molde para Ravioles",
           descripcion: "Molde 3D para ravioles artesanales con corte y sellado en una sola operación.",
-          imagen: "images/molde-ravioles.png",
+          imagen: "images/molde-ravioles.jpg",
           filamento: [],
           destacado: false
         },
@@ -699,6 +699,14 @@ const CATALOGO_DATA = {
           nombre: "Caja Sorpresa de Pascuas",
           descripcion: "Huevo gigante articulado que se abre para revelar un compartimento interior.",
           imagen: "images/caja-pascuas.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "portaplumas-calendario",
+          nombre: "Portaplumas con Calendario",
+          descripcion: "Portaplumas con calendario integrado para organizar tu escritorio.",
+          imagen: "images/Portaplumas-calendario.png",
           filamento: [],
           destacado: false
         }
