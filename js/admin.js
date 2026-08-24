@@ -138,12 +138,18 @@
   // ===== PRODUCTS TABLE =====
   function renderProductsTable() {
     let rows = '';
+    const markup = appConfig.markup || 3;
+    const costoGramo = appConfig.costoGramo || 25;
     secciones.forEach(sec => {
       (sec.productos || []).forEach(p => {
+        const totalG = (p.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
+        const precio = Math.round(totalG * costoGramo * markup);
+        const precioStr = totalG > 0 ? `$${precio.toLocaleString('es-AR')}` : '-';
         rows += `
           <tr>
             <td><img class="col-img" src="${p.imagen}" alt="${p.nombre}"></td>
             <td><strong>${p.nombre}</strong><br><span style="color:var(--text-muted);font-size:0.8rem;">${sec.nombre}</span></td>
+            <td style="text-align:center;font-weight:700;color:var(--accent);">${precioStr}</td>
             <td class="col-actions">
               <button class="btn-edit" data-edit="${p.id}" data-sec="${sec.id}">Editar</button>
               <button class="btn-delete" data-delete="${p.id}" data-sec="${sec.id}">Eliminar</button>
@@ -154,7 +160,7 @@
     });
 
     if (!rows) {
-      rows = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px;">No hay productos. Creá uno nuevo.</td></tr>';
+      rows = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:40px;">No hay productos. Creá uno nuevo.</td></tr>';
     }
 
     $('#productsTable').innerHTML = `
@@ -163,6 +169,7 @@
           <tr>
             <th></th>
             <th>Producto</th>
+            <th>Precio</th>
             <th></th>
           </tr>
         </thead>
@@ -215,26 +222,31 @@
     }).join('');
 
     const totalGrams = productFilamento.reduce((s, f) => s + (f.gramos || 0), 0);
+    const markup = appConfig.markup || 3;
+    const costoGramo = appConfig.costoGramo || 25;
+    const precioEstimado = Math.round(totalGrams * costoGramo * markup);
 
     const formHtml = `
       <div class="form-group">
-        <label>Nombre</label>
+        <label for="formNombre">Nombre</label>
         <input type="text" id="formNombre" value="${product?.nombre || ''}">
       </div>
       <div class="form-group">
-        <label>Sección</label>
+        <label for="formSeccion">Sección</label>
         <select id="formSeccion">${sectionOptions}</select>
       </div>
       <div class="form-group">
-        <label>Descripción (cómo se usa / cómo se juega)</label>
+        <label for="formDesc">Descripción</label>
         <textarea id="formDesc">${product?.descripcion || ''}</textarea>
       </div>
       <div class="form-group">
-        <label>Ruta de imagen</label>
+        <label for="formImagen">Ruta de imagen</label>
         <input type="text" id="formImagen" value="${product?.imagen || 'images/'}" placeholder="images/archivo.png">
       </div>
       <div class="form-group">
-        <label>Filamento por producto <span id="formFilTotal" style="color:var(--accent);font-weight:600;">(${totalGrams}g total)</span></label>
+        <label>Filamento por producto <span id="formFilTotal" style="color:var(--accent);font-weight:600;">(${totalGrams}g total)</span>
+          <span id="formPrecioEst" style="color:var(--gold);font-weight:600;margin-left:12px;">→ $${precioEstimado.toLocaleString('es-AR')} (x${markup})</span>
+        </label>
         <div class="fil-grid">${filamentoRows}</div>
       </div>
       <div class="form-actions">
@@ -255,6 +267,10 @@
         let total = 0;
         document.querySelectorAll('.fil-grams-input').forEach(i => total += parseInt(i.value) || 0);
         $('#formFilTotal').textContent = `(${total}g total)`;
+        const mk = appConfig.markup || 3;
+        const cg = appConfig.costoGramo || 25;
+        const precio = Math.round(total * cg * mk);
+        $('#formPrecioEst').textContent = `→ $${precio.toLocaleString('es-AR')} (x${mk})`;
       });
     });
 
@@ -441,20 +457,37 @@
   function renderConfigForm() {
     $('#configForm').innerHTML = `
       <div class="form-group">
-        <label>Número de WhatsApp (formato: 5491155551234)</label>
+        <label for="cfgWhatsapp">Número de WhatsApp (formato: 5491155551234)</label>
         <input type="text" id="cfgWhatsapp" value="${appConfig.whatsapp?.numero || ''}" placeholder="5491155551234">
       </div>
       <div class="form-group">
-        <label>Nombre del catálogo</label>
+        <label for="cfgNombre">Nombre del catálogo</label>
         <input type="text" id="cfgNombre" value="${appConfig.catalogo?.nombre || 'Luck VM'}">
       </div>
       <div class="form-group">
-        <label>Subtítulo del header</label>
+        <label for="cfgSubtitulo">Subtítulo del header</label>
         <input type="text" id="cfgSubtitulo" value="${appConfig.catalogo?.subtitulo || 'Catálogo de Productos • Impresión Creativa'}">
       </div>
       <div class="form-group">
-        <label>URL del video (YouTube embed u otro)</label>
+        <label for="cfgVideo">URL del video (YouTube embed u otro)</label>
         <input type="text" id="cfgVideo" value="${appConfig.catalogo?.videoUrl || ''}" placeholder="https://www.youtube.com/embed/...">
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);margin:20px 0;padding-top:20px;">
+        <label style="font-weight:700;color:var(--gold);margin-bottom:12px;display:block;">💰 Precios (solo visible en admin)</label>
+        <div class="form-group">
+          <label for="cfgCostoGramo">Costo por gramo de filamento ($)</label>
+          <input type="number" id="cfgCostoGramo" value="${appConfig.costoGramo || 25}" min="1" placeholder="25">
+        </div>
+        <div class="form-group">
+          <label for="cfgMarkup">Multiplicador de precio (x)</label>
+          <select id="cfgMarkup">
+            <option value="2" ${appConfig.markup === 2 ? 'selected' : ''}>x2</option>
+            <option value="3" ${(appConfig.markup || 3) === 3 ? 'selected' : ''}>x3 (recomendado)</option>
+            <option value="4" ${appConfig.markup === 4 ? 'selected' : ''}>x4</option>
+            <option value="5" ${appConfig.markup === 5 ? 'selected' : ''}>x5</option>
+          </select>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px;">Precio = Gramos × Costo/gramo × Multiplicador</p>
       </div>
       <div class="form-actions">
         <button class="btn-primary" id="cfgSave">Guardar configuración</button>
@@ -468,7 +501,9 @@
           nombre: $('#cfgNombre').value.trim(),
           subtitulo: $('#cfgSubtitulo').value.trim(),
           videoUrl: $('#cfgVideo').value.trim()
-        }
+        },
+        costoGramo: parseFloat($('#cfgCostoGramo').value) || 25,
+        markup: parseInt($('#cfgMarkup').value) || 3
       };
 
       try {

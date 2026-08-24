@@ -12,7 +12,7 @@ const FirebaseDB = (() => {
       const doc = await db.collection('admin').doc(CONFIG_DOC).get();
       if (doc.exists) return doc.data();
     } catch (e) { /* ignore */ }
-    return { whatsapp: { numero: '5493535630595' }, catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: '' } };
+    return { whatsapp: { numero: '5493535630595' }, catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: '' }, costoGramo: 25, markup: 3 };
   }
 
   async function saveConfig(data) {
@@ -214,7 +214,9 @@ const FirebaseDB = (() => {
 
     await saveConfig({
       whatsapp: { numero: '5493535630595' },
-      catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: '' }
+      catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: '' },
+      costoGramo: 25,
+      markup: 3
     });
 
     await seedFilamentos();

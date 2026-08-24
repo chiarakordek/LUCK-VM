@@ -3,7 +3,7 @@
 
   let cart = JSON.parse(localStorage.getItem('luckvm_cart')) || [];
   let secciones = [];
-  let appConfig = { whatsapp: { numero: '5493535630595' }, catalogo: { nombre: 'Luck VM', subtitulo: '', videoUrl: '' } };
+  let appConfig = { whatsapp: { numero: '5493535630595' }, catalogo: { nombre: 'Luck VM', subtitulo: '', videoUrl: '' }, costoGramo: 25, markup: 3 };
   let currentProduct = null;
   let currentQty = 1;
   let activeSection = 'all';
