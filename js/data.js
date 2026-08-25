@@ -1,385 +1,6 @@
 const CATALOGO_DATA = {
   secciones: [
     {
-      id: "juegos-mesa",
-      nombre: "Juegos de Mesa",
-      orden: 6,
-      productos: [
-        {
-          id: "tetris-balance",
-          nombre: "Tetris Balance 3D",
-          descripcion: "Juego de equilibrio con piezas estilo Tetris y base oscilante. Se coloca una pieza por turno y se mantiene el balance.",
-          imagen: "images/equilibrio-tetris.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "arbol-monos",
-          nombre: "Árbol de Monos en Equilibrio",
-          descripcion: "Juego de equilibrio donde se cuelgan monos de un árbol sin que caiga la base.",
-          imagen: "images/equilibrio-monos.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "torre-pagoda",
-          nombre: "Torre Pagoda Jinja",
-          descripcion: "Juego de extracción de piezas de una torre pagoda sin que se caiga.",
-          imagen: "images/equilibrio-jinja.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "memotest-bananas",
-          nombre: "Memotest Isla Banana",
-          descripcion: "Juego de memoria con bananas de colores y dado para combinar.",
-          imagen: "images/memoria-bananas.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "huerta-memoria",
-          nombre: "Huerta de Memoria (Carrot Pop)",
-          descripcion: "Juego de memoria con zanahorias que ocultan colores en una base.",
-          imagen: "images/memoria-zanahoria.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "batalla-naval",
-          nombre: "Batalla Naval 3D",
-          descripcion: "Batalla naval clásica en versión 3D con tablero elevado y piezas articuladas.",
-          imagen: "images/batalla-naval.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "juego-logico",
-          nombre: "Juego Lógico Sekrit Enigma",
-          descripcion: "Set de piezas geométricas que se encastran en una base hexagonal con 20 niveles de dificultad.",
-          imagen: "images/juego-logico.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "futbol-dedos",
-          nombre: "Fútbol de Dedos 3D",
-          descripcion: "Minicancha de fútbol con jugadores articulados que se controlan con los dedos.",
-          imagen: "images/futbol-dedos.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "ajedrez-3d",
-          nombre: "Ajedrez 3D Personalizado",
-          descripcion: "Tablero de ajedrez con piezas impresas en 3D con diseño único.",
-          imagen: "images/ajedrez.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "coincidencia-perfecta",
-          nombre: "Juego Coincidencia Perfecta",
-          descripcion: "Juego de rapidez visual donde se buscan coincidencias entre patrones de colores y formas.",
-          imagen: "images/juego-Coincidencia-Perfecta.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "destornillar-motriz",
-          nombre: "Juego Destornillar - Habilidad Motriz",
-          descripcion: "Set de destornilladores y tornillos de colores para practicar habilidades motoras finas.",
-          imagen: "images/destornillar-juegomotriz.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "barras-construccion",
-          nombre: "Barras de Construcción 3D",
-          descripcion: "Set de barras articuladas que se ensamblan de múltiples formas para crear estructuras.",
-          imagen: "images/barras-construccion.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "armado-tren",
-          nombre: "Armado Tren con Tornillo",
-          descripcion: "Kit de armado de tren articulado con tornillos reutilizables.",
-          imagen: "images/armado-tren-tornillo.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "armado-formula1",
-          nombre: "Armado Auto Fórmula 1",
-          descripcion: "Modelo armable de auto Fórmula 1 con piezas encastrables y ruedas giratorias.",
-          imagen: "images/armado-formula1.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "armado-excavadora",
-          nombre: "Armado Excavadora",
-          descripcion: "Maquinaria pesada armable con cucharón articulado y ruedas móviles.",
-          imagen: "images/armado-excavadora.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "armado-excavadora2",
-          nombre: "Armado Excavadora Versión 2",
-          descripcion: "Segunda versión de la excavadora armable con mejoras en el mecanismo.",
-          imagen: "images/armado-excavadora2.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "armado-avion",
-          nombre: "Armado Avión",
-          descripcion: "Avión armable con alas articuladas y hélice giratoria.",
-          imagen: "images/armado-avion.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "armado-avion-tornillo",
-          nombre: "Armado Avión con Tornillo",
-          descripcion: "Avión armado con sistema de tornillos reutilizables para practicar motricidad fina.",
-          imagen: "images/armado-avion-tornillo.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "armado-auto",
-          nombre: "Armado Auto Clásico",
-          descripcion: "Auto clásico armable con carrocería articulada y ruedas giratorias.",
-          imagen: "images/armado-auto.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "tejo-mesa",
-          nombre: "Tejo de Mesa 3D",
-          descripcion: "Juego de tejo en miniatura impreso en 3D con tablero y piezas móviles.",
-          imagen: "images/juego-tejo-mesa.jpg",
-          filamento: [],
-          destacado: false
-        }
-      ]
-    },
-    {
-      id: "llaveros",
-      nombre: "Llaveros",
-      orden: 7,
-      productos: [
-        {
-          id: "llavero-chocolate",
-          nombre: "Llavero Puzzle Barra de Chocolate",
-          descripcion: "Llavero articulado con piezas que encajan y se desensamblan.",
-          imagen: "images/llaverofidget-chocolate.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "llavero-tnt",
-          nombre: "Llavero Caja TNT Clicker",
-          descripcion: "Llavero estilo pixel-art con switch mecánico táctil.",
-          imagen: "images/llaverofidget-minecraft.jpg",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "llaveros-dumpling",
-          nombre: "Llaveros Dumpling Baozi Kawaii",
-          descripcion: "Llavero con forma de dumpling con pulsador elástico y rebote suave.",
-          imagen: "images/llaverofidget-dumpling.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "paleta-6-teclas",
-          nombre: "Llavero Paleta 6 Teclas Clicker",
-          descripcion: "Llavero con 6 interruptores mecánicos independientes en formato compacto.",
-          imagen: "images/llaverofidget-teclado2.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "patita-michi",
-          nombre: "Llaveros Patita de Michi Clicker",
-          descripcion: "Llavero en forma de huellita felina con switch mecánico.",
-          imagen: "images/llaverofidget-patitas.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "llavero-teclado",
-          nombre: "Llavero Teclado Clicker 4 Teclas",
-          descripcion: "Mini teclado portátil con 4 interruptores mecánicos y cadena para llaves.",
-          imagen: "images/llaverofidget-teclado.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "llavero-creeper",
-          nombre: "Llavero Creeper Minecraft Clicker",
-          descripcion: "Cabeza pixelada de Creeper con switch mecánico y cadena metálica.",
-          imagen: "images/llaverofidget-minecraft2.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "llavero-variedad",
-          nombre: "Llavero Variedad Fidget Mix",
-          descripcion: "Set de llaveros fidget variados con diferentes mecanismos táctiles.",
-          imagen: "images/llaverofidget-variedad.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "llavero-articulado",
-          nombre: "Llavero Articulado Flexible",
-          descripcion: "Llavero con eslabones articulados que se flexionan y mueven.",
-          imagen: "images/llavero-articulado.png",
-          filamento: [],
-          destacado: false
-        }
-      ]
-    },
-    {
-      id: "fidget",
-      nombre: "Fidget",
-      orden: 4,
-      productos: [
-        {
-          id: "pad-fidget-9",
-          nombre: "Pad Fidget 9 Teclas Mecánicas",
-          descripcion: "Base con 9 teclas activas en tono pastel para disfrutar la sensación de teclado mecánico.",
-          imagen: "images/llaverofidget-teclado3.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "estrella-espiral",
-          nombre: "Estrella Geométrica Espiral",
-          descripcion: "Anillos concéntricos en forma de estrella que se despliegan telescópicamente.",
-          imagen: "images/estrella-espiral.jpg",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "engranaje-roller",
-          nombre: "Engranaje Doble Rodillo (Gear Roller)",
-          descripcion: "Dos cilindros dentados sincronizados que giran con fluidez entre los dedos.",
-          imagen: "images/engranaje-roller.jpg",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "cubo-infinito",
-          nombre: "Cubo Infinito Texturizado",
-          descripcion: "Ocho cubos con bisagras que se pliegan y despliegan de forma continua.",
-          imagen: "images/cubo-infinito.jpg",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "pinza-pesca",
-          nombre: "Pinza de Pesca para Insectos",
-          descripcion: "Pinza extensible con mecanismo de resorte para atrapar insectos sin dañarlos.",
-          imagen: "images/juego-pesca.png",
-          filamento: [],
-          destacado: false
-        }
-      ]
-    },
-    {
-      id: "pokemon",
-      nombre: "Pokémon",
-      orden: 9,
-      productos: [
-        {
-          id: "caja-pokemon",
-          nombre: "Caja Porta Cartas Pokémon (Deck Box)",
-          descripcion: "Caja temática de alta resistencia con tapa en relieve de Pikachu y Pokébola.",
-          imagen: "images/caja-pokemon.jpeg",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "caja-pokemon2",
-          nombre: "Caja Porta Cartas Pokémon Premium",
-          descripcion: "Versión premium con Pokébola en relieve, interior forrado y cierre magnético.",
-          imagen: "images/caja-pokemon2.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "caja-pokemon3",
-          nombre: "Caja Porta Cartas Pokémon Edición Especial",
-          descripcion: "Edición especial con diseño único en relieve 3D y separadores ajustables.",
-          imagen: "images/caja-pokemon3.png",
-          filamento: [],
-          destacado: false
-        }
-      ]
-    },
-    {
-      id: "comida",
-      nombre: "Comida",
-      orden: 3,
-      productos: [
-        {
-          id: "fideos-sensorial",
-          nombre: "Set Fideos, Salsa, Tomate, Tenedor y Bowl Sensorial",
-          descripcion: "Set de comida sensorial con fideos, salsa, tomate, tenedor y bowl.",
-          imagen: "images/fideos-salsa-tomate-tenedor-bowl-sensorial.png",
-          filamento: [],
-          destacado: true
-        },
-        {
-          id: "choclo-sensorial",
-          nombre: "Choclo / Mazorca Sensorial Flexible",
-          descripcion: "Mazorca con granos articulados independientes que se mueven al deslizar los dedos.",
-          imagen: "images/choclo-sensorial.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "papas-huevo-pollo",
-          nombre: "Combo Papas, Huevo, Pollo y Sartén Sensorial",
-          descripcion: "Set de comida sensorial con papas fritas, huevo, pollo y sartén.",
-          imagen: "images/papas-huevo-pollo-sarten-sensorial.jpg",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "cade-medialuna",
-          nombre: "Cade Medialuna Antiestrés",
-          descripcion: "Medialuna artesanal en cade con efecto antiestrés.",
-          imagen: "images/cade-medialuna-antiestres.jpg",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "armar-donas",
-          nombre: "Armá tus Donas Sensorial",
-          descripcion: "Kit para armar donas con piezas sensoriales de colores.",
-          imagen: "images/armar-donas-sensorial.png",
-          filamento: [],
-          destacado: false
-        },
-        {
-          id: "combo-cocina",
-          nombre: "Combo Cocina y Utensilios",
-          descripcion: "Set completo de utensilios de cocina para jugar y decorar.",
-          imagen: "images/combo-cocinautencillos.jpg",
-          filamento: [],
-          destacado: false
-        }
-      ]
-    },
-    {
       id: "bazar",
       nombre: "Bazar",
       orden: 1,
@@ -579,8 +200,165 @@ const CATALOGO_DATA = {
       ]
     },
     {
-      id: "hogar",
-      nombre: "Hogar",
+      id: "cajas-cestas",
+      nombre: "Cajas y Cestas",
+      orden: 2,
+      productos: [
+        {
+          id: "cesta-regalo",
+          nombre: "Cesta de Regalo Circular",
+          descripcion: "Cesta redonda tejida en filamento con asa elevada y acabado rústico.",
+          imagen: "images/cesta-regalo.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "cesta-regalo2",
+          nombre: "Cesta de Regalo Cuadrada",
+          descripcion: "Cesta cuadrada con borde reforzado y asa plegable.",
+          imagen: "images/cesta-regalo2.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "caja-corazon",
+          nombre: "Caja Regalo Corazón 3D",
+          descripcion: "Caja con forma de corazón con tapa abatible y relieve tridimensional.",
+          imagen: "images/caja-regalo-corazon.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "caja-corazon2",
+          nombre: "Caja Regalo Corazón Doble Capa",
+          descripcion: "Caja corazón con doble pared decorativa y cierre magnético oculto.",
+          imagen: "images/caja-regalo-corazon2.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "caja-minecraft",
+          nombre: "Caja Regalo Corazón Minecraft",
+          descripcion: "Caja corazón estilo pixel-art inspirada en Minecraft.",
+          imagen: "images/caja-regalo-corazonminecraft.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "caja-mini-regalo",
+          nombre: "Caja Mini Regalo Corazón",
+          descripcion: "Cajita compacta con forma de corazón para detalles pequeños.",
+          imagen: "images/cajamini-regalo-corazon.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "caja-pascuas",
+          nombre: "Caja Sorpresa de Pascuas",
+          descripcion: "Huevo gigante articulado que se abre para revelar un compartimento interior.",
+          imagen: "images/caja-pascuas.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "portaplumas-calendario",
+          nombre: "Portaplumas con Calendario",
+          descripcion: "Portaplumas con calendario integrado para organizar tu escritorio.",
+          imagen: "images/Portaplumas-calendario.png",
+          filamento: [],
+          destacado: false
+        }
+      ]
+    },
+    {
+      id: "comida",
+      nombre: "Comida",
+      orden: 3,
+      productos: [
+        {
+          id: "fideos-sensorial",
+          nombre: "Set Fideos, Salsa, Tomateflexible, Tenedor, Cuchillo, Albóndiga a Broch y Bowl Sensorial",
+          descripcion: "Set de comida sensorial con fideos, salsa, tomate, tenedor, cuchillo, albóndiga y bowl.",
+          imagen: "images/fideos-salsa-tomateflexible-tenedorcuchillo-albondigaabrojo-bowl-sensorial.jpeg",
+          filamento: [],
+          destacado: true
+        },
+        {
+          id: "choclo-sensorial",
+          nombre: "Choclo / Mazorca Sensorial Flexible",
+          descripcion: "Mazorca con granos articulados independientes que se mueven al deslizar los dedos.",
+          imagen: "images/choclo-sensorial.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "papas-huevo-pollo",
+          nombre: "Combo Papas, Huevo, Pollo y Sartén Sensorial",
+          descripcion: "Set de comida sensorial con papas fritas, huevo, pollo y sartén.",
+          imagen: "images/papas-huevo-pollo-sarten-sensorial.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "cade-medialuna",
+          nombre: "Cade Medialuna Antiestrés",
+          descripcion: "Medialuna artesanal en cade con efecto antiestrés.",
+          imagen: "images/cade-medialuna-antiestres.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "armar-donas",
+          nombre: "Armá tus Donas Sensorial",
+          descripcion: "Kit para armar donas con piezas sensoriales de colores.",
+          imagen: "images/armar-donas-sensorial.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "combo-cocina",
+          nombre: "Combo Cocina y Utensilios",
+          descripcion: "Set completo de utensilios de cocina para jugar y decorar.",
+          imagen: "images/combo-cocinautencillos.jpg",
+          filamento: [],
+          destacado: false
+        }
+      ]
+    },
+    {
+      id: "fidget",
+      nombre: "Fidget",
+      orden: 4,
+      productos: [
+        {
+          id: "estrella-espiral",
+          nombre: "Estrella Geométrica Espiral",
+          descripcion: "Anillos concéntricos en forma de estrella que se despliegan telescópicamente.",
+          imagen: "images/estrella-espiral.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "engranaje-roller",
+          nombre: "Engranaje Doble Rodillo (Gear Roller)",
+          descripcion: "Dos cilindros dentados sincronizados que giran con fluidez entre los dedos.",
+          imagen: "images/engranaje-roller.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "cubo-infinito",
+          nombre: "Cubo Infinito Texturizado",
+          descripcion: "Ocho cubos con bisagras que se pliegan y despliegan de forma continua.",
+          imagen: "images/cubo-infinito.jpg",
+          filamento: [],
+          destacado: false
+        }
+      ]
+    },
+    {
+      id: "soportes",
+      nombre: "Soportes",
       orden: 5,
       productos: [
         {
@@ -666,71 +444,262 @@ const CATALOGO_DATA = {
       ]
     },
     {
-      id: "cajas-cestas",
-      nombre: "Cajas y Cestas",
-      orden: 2,
+      id: "juegos-mesa",
+      nombre: "Juegos de Mesa",
+      orden: 6,
       productos: [
         {
-          id: "cesta-regalo",
-          nombre: "Cesta de Regalo Circular",
-          descripcion: "Cesta redonda tejida en filamento con asa elevada y acabado rústico.",
-          imagen: "images/cesta-regalo.png",
+          id: "tetris-balance",
+          nombre: "Tetris Balance 3D",
+          descripcion: "Juego de equilibrio con piezas estilo Tetris y base oscilante. Se coloca una pieza por turno y se mantiene el balance.",
+          imagen: "images/equilibrio-tetris.png",
           filamento: [],
           destacado: false
         },
         {
-          id: "cesta-regalo2",
-          nombre: "Cesta de Regalo Cuadrada",
-          descripcion: "Cesta cuadrada con borde reforzado y asa plegable.",
-          imagen: "images/cesta-regalo2.png",
+          id: "arbol-monos",
+          nombre: "Árbol de Monos en Equilibrio",
+          descripcion: "Juego de equilibrio donde se cuelgan monos de un árbol sin que caiga la base.",
+          imagen: "images/equilibrio-monos.png",
           filamento: [],
           destacado: false
         },
         {
-          id: "caja-corazon",
-          nombre: "Caja Regalo Corazón 3D",
-          descripcion: "Caja con forma de corazón con tapa abatible y relieve tridimensional.",
-          imagen: "images/caja-regalo-corazon.png",
+          id: "torre-pagoda",
+          nombre: "Torre Pagoda Jinja",
+          descripcion: "Juego de extracción de piezas de una torre pagoda sin que se caiga.",
+          imagen: "images/equilibrio-jinja.png",
           filamento: [],
           destacado: false
         },
         {
-          id: "caja-corazon2",
-          nombre: "Caja Regalo Corazón Doble Capa",
-          descripcion: "Caja corazón con doble pared decorativa y cierre magnético oculto.",
-          imagen: "images/caja-regalo-corazon2.png",
+          id: "memotest-bananas",
+          nombre: "Memotest Isla Banana",
+          descripcion: "Juego de memoria con bananas de colores y dado para combinar.",
+          imagen: "images/memoria-bananas.png",
           filamento: [],
           destacado: false
         },
         {
-          id: "caja-minecraft",
-          nombre: "Caja Regalo Corazón Minecraft",
-          descripcion: "Caja corazón estilo pixel-art inspirada en Minecraft.",
-          imagen: "images/caja-regalo-corazonminecraft.png",
+          id: "huerta-memoria",
+          nombre: "Huerta de Memoria (Carrot Pop)",
+          descripcion: "Juego de memoria con zanahorias que ocultan colores en una base.",
+          imagen: "images/memoria-zanahoria.png",
           filamento: [],
           destacado: false
         },
         {
-          id: "caja-mini-regalo",
-          nombre: "Caja Mini Regalo Corazón",
-          descripcion: "Cajita compacta con forma de corazón para detalles pequeños.",
-          imagen: "images/cajamini-regalo-corazon.png",
+          id: "batalla-naval",
+          nombre: "Batalla Naval 3D",
+          descripcion: "Batalla naval clásica en versión 3D con tablero elevado y piezas articuladas.",
+          imagen: "images/batalla-naval.png",
           filamento: [],
           destacado: false
         },
         {
-          id: "caja-pascuas",
-          nombre: "Caja Sorpresa de Pascuas",
-          descripcion: "Huevo gigante articulado que se abre para revelar un compartimento interior.",
-          imagen: "images/caja-pascuas.png",
+          id: "juego-logico",
+          nombre: "Juego Lógico Sekrit Enigma",
+          descripcion: "Set de piezas geométricas que se encastran en una base hexagonal con 20 niveles de dificultad.",
+          imagen: "images/juego-logico.png",
           filamento: [],
           destacado: false
         },
         {
-          id: "portaplumas-calendario",
-          nombre: "Portaplumas con Calendario",
-          descripcion: "Portaplumas con calendario integrado para organizar tu escritorio.",
-          imagen: "images/Portaplumas-calendario.png",
+          id: "futbol-dedos",
+          nombre: "Fútbol de Dedos 3D",
+          descripcion: "Minicancha de fútbol con jugadores articulados que se controlan con los dedos.",
+          imagen: "images/futbol-dedos.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "ajedrez-3d",
+          nombre: "Ajedrez 3D Personalizado",
+          descripcion: "Tablero de ajedrez con piezas impresas en 3D con diseño único.",
+          imagen: "images/ajedrez.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "coincidencia-perfecta",
+          nombre: "Juego Coincidencia Perfecta",
+          descripcion: "Juego de rapidez visual donde se buscan coincidencias entre patrones de colores y formas.",
+          imagen: "images/juego-Coincidencia-Perfecta.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "destornillar-motriz",
+          nombre: "Juego Destornillar - Habilidad Motriz",
+          descripcion: "Set de destornilladores y tornillos de colores para practicar habilidades motoras finas.",
+          imagen: "images/destornillar-juegomotriz.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "barras-construccion",
+          nombre: "Barras de Construcción 3D",
+          descripcion: "Set de barras articuladas que se ensamblan de múltiples formas para crear estructuras.",
+          imagen: "images/barras-construccion.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "armado-tren",
+          nombre: "Armado Tren con Tornillo",
+          descripcion: "Kit de armado de tren articulado con tornillos reutilizables.",
+          imagen: "images/armado-tren-tornillo.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "armado-formula1",
+          nombre: "Armado Auto Fórmula 1",
+          descripcion: "Modelo armable de auto Fórmula 1 con piezas encastrables y ruedas giratorias.",
+          imagen: "images/armado-formula1.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "armado-excavadora",
+          nombre: "Armado Excavadora",
+          descripcion: "Maquinaria pesada armable con cucharón articulado y ruedas móviles.",
+          imagen: "images/armado-excavadora.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "armado-excavadora2",
+          nombre: "Armado Excavadora Versión 2",
+          descripcion: "Segunda versión de la excavadora armable con mejoras en el mecanismo.",
+          imagen: "images/armado-excavadora2.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "armado-avion",
+          nombre: "Armado Avión",
+          descripcion: "Avión armable con alas articuladas y hélice giratoria.",
+          imagen: "images/armado-avion.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "armado-avion-tornillo",
+          nombre: "Armado Avión con Tornillo",
+          descripcion: "Avión armado con sistema de tornillos reutilizables para practicar motricidad fina.",
+          imagen: "images/armado-avion-tornillo.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "armado-auto",
+          nombre: "Armado Auto Clásico",
+          descripcion: "Auto clásico armable con carrocería articulada y ruedas giratorias.",
+          imagen: "images/armado-auto.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "tejo-mesa",
+          nombre: "Tejo de Mesa 3D",
+          descripcion: "Juego de tejo en miniatura impreso en 3D con tablero y piezas móviles.",
+          imagen: "images/juego-tejo-mesa.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "pinza-pesca",
+          nombre: "Pesca Competitiva",
+          descripcion: "Caña con mecanismo de resorte para atrapar peces con el objetivo de pescar el mas grande.",
+          imagen: "images/juego-pesca.png",
+          filamento: [],
+          destacado: false
+        }
+      ]
+    },
+    {
+      id: "llaveros",
+      nombre: "Llaveros",
+      orden: 7,
+      productos: [
+        {
+          id: "llavero-chocolate",
+          nombre: "Barra de Chocolate Clicker",
+          descripcion: "Llavero articulado con piezas que encajan y se desensamblan.",
+          imagen: "images/llaverofidget-chocolate.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "llavero-tnt",
+          nombre: "Llavero Caja TNT Clicker",
+          descripcion: "Llavero estilo pixel-art con switch mecánico táctil.",
+          imagen: "images/llaverofidget-minecraft2.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "llaveros-dumpling",
+          nombre: "Llaveros Dumpling Baozi Kawaii",
+          descripcion: "Llavero con forma de dumpling con pulsador elástico y rebote suave.",
+          imagen: "images/llaverofidget-dumpling.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "paleta-6-teclas",
+          nombre: "Llavero Paleta 6 Teclas Clicker",
+          descripcion: "Llavero con 6 interruptores mecánicos independientes en formato compacto.",
+          imagen: "images/llaverofidget-teclado2.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "patita-michi",
+          nombre: "Llaveros Patita de Michi Clicker",
+          descripcion: "Llavero en forma de huellita felina con switch mecánico.",
+          imagen: "images/llaverofidget-patitas.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "llavero-teclado",
+          nombre: "Llavero Teclado Clicker",
+          descripcion: "Mini teclado portátil con interruptores mecánicos y cadena para llaves.",
+          imagen: "images/llaverofidget-teclado.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "llavero-creeper",
+          nombre: "Llavero Creeper Minecraft Clicker",
+          descripcion: "Cabeza pixelada de Creeper con switch mecánico y cadena metálica.",
+          imagen: "images/llaverofidget-minecraft.jpg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "llavero-variedad",
+          nombre: "Llavero Variedad Fidget Mix",
+          descripcion: "Set de llaveros fidget variados con diferentes mecanismos táctiles.",
+          imagen: "images/llaverofidget-variedad.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "llavero-articulado",
+          nombre: "Llavero Articulado Flexible",
+          descripcion: "Llavero con eslabones articulados que se flexionan y mueven.",
+          imagen: "images/llavero-articulado.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "pad-fidget-9",
+          nombre: "Fidget Teclas Mecánicas",
+          descripcion: "Base con teclas activas en tono pastel para disfrutar la sensación de teclado mecánico.",
+          imagen: "images/llaverofidget-teclado3.png",
           filamento: [],
           destacado: false
         }
@@ -798,8 +767,39 @@ const CATALOGO_DATA = {
           destacado: false
         }
       ]
+    },
+    {
+      id: "pokemon",
+      nombre: "Pokémon",
+      orden: 9,
+      productos: [
+        {
+          id: "caja-pokemon",
+          nombre: "Caja Porta Cartas Pokémon (Deck Box)",
+          descripcion: "Caja temática de alta resistencia con tapa en relieve de Pikachu y Pokébola.",
+          imagen: "images/caja-pokemon.jpeg",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "caja-pokemon2",
+          nombre: "Caja Porta Cartas Pokémon Premium",
+          descripcion: "Versión premium con Pokébola en relieve, interior forrado y cierre magnético.",
+          imagen: "images/caja-pokemon2.png",
+          filamento: [],
+          destacado: false
+        },
+        {
+          id: "caja-pokemon3",
+          nombre: "Caja Porta Cartas Pokémon Edición Especial",
+          descripcion: "Edición especial con diseño único en relieve 3D y separadores ajustables.",
+          imagen: "images/caja-pokemon3.png",
+          filamento: [],
+          destacado: false
+        }
+      ]
     }
   ],
-  version: "1.3.0",
+  version: "1.4.0",
   ultimaActualizacion: new Date().toISOString()
 };

@@ -7,10 +7,33 @@ const FirebaseDB = (() => {
   const PEDIDOS_COL = 'pedidos';
 
   // ===== CONFIG =====
+  function normalizeYoutubeUrl(url) {
+    if (!url) return url;
+    const patterns = [
+      { regex: /^https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/, replace: 'https://www.youtube.com/embed/$1' },
+      { regex: /^https?:\/\/(www\.)?youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]+)/, replace: 'https://www.youtube.com/embed/$2' },
+      { regex: /^https?:\/\/(www\.)?youtube\.com\/embed\//, replace: null }
+    ];
+    for (const p of patterns) {
+      if (p.regex.test(url)) return p.replace ? url.replace(p.regex, p.replace) : url;
+    }
+    return url;
+  }
+
   async function getConfig() {
     try {
       const doc = await db.collection('admin').doc(CONFIG_DOC).get();
-      if (doc.exists) return doc.data();
+      if (doc.exists) {
+        const data = doc.data();
+        if (data.catalogo?.videoUrl) {
+          const fixed = normalizeYoutubeUrl(data.catalogo.videoUrl);
+          if (fixed !== data.catalogo.videoUrl) {
+            data.catalogo.videoUrl = fixed;
+            db.collection('admin').doc(CONFIG_DOC).set(data, { merge: true }).catch(() => {});
+          }
+        }
+        return data;
+      }
     } catch (e) { /* ignore */ }
     return { whatsapp: { numero: '5493535630595' }, catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: 'https://www.youtube.com/embed/V8hpJz5eX38' }, costoGramo: 25, markup: 3 };
   }

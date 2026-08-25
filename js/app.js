@@ -293,6 +293,21 @@
     document.body.style.overflow = '';
   }
 
+  function loadHeaderVideo() {
+    const url = appConfig.catalogo?.videoUrl || 'https://www.youtube.com/embed/V8hpJz5eX38';
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/watch\?.*v=)([a-zA-Z0-9_-]+)/);
+    const videoId = match ? match[1] : '';
+    if (!videoId) return;
+    const container = $('#headerVideo');
+    if (!container) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&vq=hd1080&hd=1`;
+    iframe.frameBorder = '0';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    container.appendChild(iframe);
+  }
+
   async function init() {
     try {
       [secciones, appConfig] = await Promise.all([
@@ -310,6 +325,7 @@
     renderTabs();
     renderProducts();
     updateCartBadge();
+    loadHeaderVideo();
 
     $('#searchInput').addEventListener('input', (e) => {
       const search = e.target.value.trim();
