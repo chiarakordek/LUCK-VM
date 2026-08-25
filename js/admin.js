@@ -1027,6 +1027,87 @@
       btn.disabled = false;
       btn.textContent = '🔄 Resetear Catálogo (re-seedear datos)';
     });
+
+    $('#btnBackupCatalogo').addEventListener('click', () => {
+      const backup = {
+        secciones: secciones.map(sec => ({
+          id: sec.id,
+          nombre: sec.nombre,
+          orden: sec.orden,
+          productos: sec.productos.map(p => ({
+            id: p.id,
+            nombre: p.nombre,
+            descripcion: p.descripcion,
+            imagen: p.imagen,
+            filamento: p.filamento || [],
+            destacado: p.destacado || false
+          }))
+        })),
+        config: appConfig,
+        fechaBackup: new Date().toISOString(),
+        version: '1.0'
+      };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `luckvm-backup-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Backup descargado');
+    });
+
+    $('#btnRestoreCatalogo').addEventListener('click', () => {
+      $('#restoreFileInput').click();
+    });
+
+    $('#restoreFileInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const backup = JSON.parse(text);
+        if (!backup.secciones || !Array.isArray(backup.secciones)) {
+          showToast('Archivo de backup inválido', true);
+          return;
+        }
+        if (!confirm(`¿Restaurar backup de ${backup.fechaBackup ? new Date(backup.fechaBackup).toLocaleString('es-AR') : 'fecha desconocida'}?\n\nEsto reemplazará el catálogo actual.`)) return;
+
+        const btn = $('#btnRestoreCatalogo');
+        btn.disabled = true;
+        btn.textContent = 'Restaurando...';
+
+        const snapshot = await FirebaseDB.getSeccionesRef();
+        for (const doc of snapshot.docs) {
+          await FirebaseDB.getSeccionesRef().doc(doc.id).delete();
+        }
+
+        for (const sec of backup.secciones) {
+          await FirebaseDB.getSeccionesRef().add({
+            nombre: sec.nombre,
+            orden: sec.orden,
+            productos: sec.productos
+          });
+        }
+
+        if (backup.config) {
+          await FirebaseDB.saveConfig(backup.config);
+          appConfig = backup.config;
+        }
+
+        secciones = await FirebaseDB.getSecciones();
+        renderDashboard();
+        renderProductsTable();
+        renderSectionsTable();
+        showToast('Backup restaurado correctamente');
+      } catch (err) {
+        console.error('Error restore:', err);
+        showToast('Error al restaurar: ' + err.message, true);
+      }
+      btn.disabled = false;
+      btn.textContent = '📥 Restaurar desde backup';
+      e.target.value = '';
+    });
   }
 
   document.addEventListener('DOMContentLoaded', init);

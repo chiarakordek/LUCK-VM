@@ -25,6 +25,10 @@ const FirebaseDB = (() => {
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
 
+  function getSeccionesRef() {
+    return db.collection(SECCIONES_COL);
+  }
+
   async function addSeccion(data) {
     const ref = await db.collection(SECCIONES_COL).add({
       nombre: data.nombre,
@@ -290,6 +294,7 @@ const FirebaseDB = (() => {
     getConfig,
     saveConfig,
     getSecciones,
+    getSeccionesRef,
     addSeccion,
     updateSeccion,
     deleteSeccion,

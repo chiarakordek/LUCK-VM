@@ -87,9 +87,12 @@
         <h2>Dashboard</h2>
         <p class="page-desc">Resumen general del catálogo</p>
         <div class="stats-grid" id="statsGrid"></div>
-        <div style="margin-top:24px;">
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn-primary" id="btnBackupCatalogo" style="background:#43a047;">💾 Backup (descargar JSON)</button>
+          <button class="btn-primary" id="btnRestoreCatalogo" style="background:#1e88e5;">📥 Restaurar desde backup</button>
+          <input type="file" id="restoreFileInput" accept=".json" style="display:none;">
           <button class="btn-primary" id="btnResetCatalogo" style="background:#e53935;">🔄 Resetear Catálogo (re-seedear datos)</button>
-          <p class="page-desc" style="margin-top:8px;font-size:0.85rem;color:#888;">Borra todos los productos y secciones de Firestore y carga los datos actualizados de data.js</p>
+          <p class="page-desc" style="width:100%;margin-top:8px;font-size:0.85rem;color:#888;">Backup: descargá tu catálogo actual. Restaurar: subí el JSON para recuperar nombres y categorías. Reset: borra todo y carga data.js.</p>
         </div>
       </div>
 
