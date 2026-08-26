@@ -979,11 +979,32 @@ body {
   margin-bottom: 12px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .pedido-fecha {
   font-size: 0.85rem;
   color: var(--text-muted);
+}
+
+.pedido-origin {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  background: var(--bg-sidebar);
+  border-radius: 12px;
+  color: var(--text-muted);
+}
+
+.pedido-cliente {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.pedido-item-price {
+  color: var(--accent-green);
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .pedido-badge {

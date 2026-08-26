@@ -140,11 +140,14 @@
     let rows = '';
     const markup = appConfig.markup || 3;
     const costoGramo = appConfig.costoGramo || 25;
+    const costoHora = appConfig.costoHora || 15;
     secciones.forEach(sec => {
       (sec.productos || []).forEach(p => {
         const totalG = (p.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
-        const precio = Math.round(totalG * costoGramo * markup);
-        const precioStr = totalG > 0 ? `$${precio.toLocaleString('es-AR')}` : '-';
+        const tiempo = p.tiempoImpresion || { horas: 0, minutos: 0 };
+        const horas = (tiempo.horas || 0) + ((tiempo.minutos || 0) / 60);
+        const precio = Math.round(((totalG * costoGramo) + (horas * costoHora)) * markup);
+        const precioStr = (totalG > 0 || horas > 0) ? `$${precio.toLocaleString('es-AR')}` : '-';
         rows += `
           <tr>
             <td><img class="col-img" src="${p.imagen}?v=2" alt="${p.nombre}"></td>
@@ -224,7 +227,12 @@
     const totalGrams = productFilamento.reduce((s, f) => s + (f.gramos || 0), 0);
     const markup = appConfig.markup || 3;
     const costoGramo = appConfig.costoGramo || 25;
-    const precioEstimado = Math.round(totalGrams * costoGramo * markup);
+    const costoHora = appConfig.costoHora || 15;
+    const tiempo = product?.tiempoImpresion || { horas: 0, minutos: 0 };
+    const horasVal = tiempo.horas || 0;
+    const minutosVal = tiempo.minutos || 0;
+    const horasDec = horasVal + (minutosVal / 60);
+    const precioEstimado = Math.round(((totalGrams * costoGramo) + (horasDec * costoHora)) * markup);
 
     const formHtml = `
       <div class="form-group">
@@ -244,8 +252,18 @@
         <input type="text" id="formImagen" value="${product?.imagen || 'images/'}" placeholder="images/archivo.png">
       </div>
       <div class="form-group">
+        <label>Tiempo de impresión</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" id="formHoras" value="${horasVal}" min="0" max="99" placeholder="0" style="width:80px;">
+          <span>hs</span>
+          <input type="number" id="formMinutos" value="${minutosVal}" min="0" max="59" placeholder="0" style="width:80px;">
+          <span>min</span>
+        </div>
+        <span style="color:var(--text-muted);font-size:0.8rem;">BambuLab A1 ~100W · $${costoHora}/hora</span>
+      </div>
+      <div class="form-group">
         <label>Filamento por producto <span id="formFilTotal" style="color:var(--accent);font-weight:600;">(${totalGrams}g total)</span>
-          <span id="formPrecioEst" style="color:var(--gold);font-weight:600;margin-left:12px;">→ $${precioEstimado.toLocaleString('es-AR')} (x${markup})</span>
+          <span id="formPrecioEst" style="color:var(--gold);font-weight:600;margin-left:12px;">→ $${precioEstimado.toLocaleString('es-AR')} (fil: ${Math.round(totalGrams * costoGramo * markup)} + tiempo: ${Math.round(horasDec * costoHora * markup)} = ${precioEstimado.toLocaleString('es-AR')})</span>
         </label>
         <div class="fil-grid">${filamentoRows}</div>
       </div>
@@ -263,21 +281,31 @@
     }
 
     document.querySelectorAll('.fil-grams-input').forEach(inp => {
-      inp.addEventListener('input', () => {
-        let total = 0;
-        document.querySelectorAll('.fil-grams-input').forEach(i => total += parseInt(i.value) || 0);
-        $('#formFilTotal').textContent = `(${total}g total)`;
-        const mk = appConfig.markup || 3;
-        const cg = appConfig.costoGramo || 25;
-        const precio = Math.round(total * cg * mk);
-        $('#formPrecioEst').textContent = `→ $${precio.toLocaleString('es-AR')} (x${mk})`;
-      });
+      inp.addEventListener('input', updateFormPrice);
     });
+    $('#formHoras').addEventListener('input', updateFormPrice);
+    $('#formMinutos').addEventListener('input', updateFormPrice);
 
     $('#formCancel').addEventListener('click', closeForm);
     $('#modalFormOverlay').addEventListener('click', (e) => {
       if (e.target === e.currentTarget) closeForm();
     });
+
+    function updateFormPrice() {
+      let total = 0;
+      document.querySelectorAll('.fil-grams-input').forEach(i => total += parseInt(i.value) || 0);
+      const hrs = parseInt($('#formHoras').value) || 0;
+      const mins = parseInt($('#formMinutos').value) || 0;
+      const hDec = hrs + (mins / 60);
+      $('#formFilTotal').textContent = `(${total}g total)`;
+      const mk = appConfig.markup || 3;
+      const cg = appConfig.costoGramo || 25;
+      const ch = appConfig.costoHora || 15;
+      const precioFil = total * cg;
+      const precioTiempo = hDec * ch;
+      const precio = Math.round((precioFil + precioTiempo) * mk);
+      $('#formPrecioEst').textContent = `→ $${precio.toLocaleString('es-AR')} (fil: ${Math.round(precioFil * mk)} + tiempo: ${Math.round(precioTiempo * mk)})`;
+    }
 
     $('#formSave').addEventListener('click', async () => {
       const nombre = $('#formNombre').value;
@@ -303,6 +331,10 @@
         descripcion: desc,
         imagen,
         filamento,
+        tiempoImpresion: {
+          horas: parseInt($('#formHoras').value) || 0,
+          minutos: parseInt($('#formMinutos').value) || 0
+        },
         destacado: product?.destacado || false
       };
 
@@ -479,6 +511,10 @@
           <input type="number" id="cfgCostoGramo" value="${appConfig.costoGramo || 25}" min="1" placeholder="25">
         </div>
         <div class="form-group">
+          <label for="cfgCostoHora">Costo por hora de impresión ($)</label>
+          <input type="number" id="cfgCostoHora" value="${appConfig.costoHora || 15}" min="1" placeholder="15">
+        </div>
+        <div class="form-group">
           <label for="cfgMarkup">Multiplicador de precio (x)</label>
           <select id="cfgMarkup">
             <option value="2" ${appConfig.markup === 2 ? 'selected' : ''}>x2</option>
@@ -487,7 +523,7 @@
             <option value="5" ${appConfig.markup === 5 ? 'selected' : ''}>x5</option>
           </select>
         </div>
-        <p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px;">Precio = Gramos × Costo/gramo × Multiplicador</p>
+        <p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px;">Precio = (Gramos × Costo/gramo + Horas × Costo/hora) × Multiplicador</p>
       </div>
       <div class="form-actions">
         <button class="btn-primary" id="cfgSave">Guardar configuración</button>
@@ -503,6 +539,7 @@
           videoUrl: $('#cfgVideo').value.trim()
         },
         costoGramo: parseFloat($('#cfgCostoGramo').value) || 25,
+        costoHora: parseFloat($('#cfgCostoHora').value) || 15,
         markup: parseInt($('#cfgMarkup').value) || 3
       };
 
@@ -673,6 +710,8 @@
   }
 
   // ===== PEDIDOS =====
+  let manualOrderItems = [];
+
   async function renderPedidosPage() {
     const container = document.getElementById('pedidosContent');
     if (!container) return;
@@ -686,15 +725,24 @@
       return;
     }
 
+    let html = `
+      <div style="margin-bottom:24px;">
+        <button class="btn-primary" id="btnNewPedido">+ Crear pedido manual</button>
+      </div>
+    `;
+
     if (pedidos.length === 0) {
-      container.innerHTML = '<div class="empty-state">No hay pedidos todavía. Los pedidos aparecen cuando un cliente envía el carrito por WhatsApp.</div>';
+      html += '<div class="empty-state">No hay pedidos todavía. Los pedidos aparecen cuando un cliente envía el carrito por WhatsApp o los creás manualmente.</div>';
+      container.innerHTML = html;
+      document.getElementById('btnNewPedido')?.addEventListener('click', openManualOrderForm);
       return;
     }
 
-    container.innerHTML = pedidos.map(p => {
+    html += pedidos.map(p => {
       const fecha = new Date(p.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
       const estadoClass = p.estado === 'pendiente' ? 'badge-pending' : p.estado === 'confirmado' ? 'badge-confirmed' : 'badge-cancelled';
-      const items = (p.items || []).map(item => {
+      const origenLabel = p.origen === 'manual' ? '📝 Manual' : p.origen === 'whatsapp' ? '📱 WhatsApp' : p.origen === 'instagram' ? '📸 Instagram' : '🛒 Catálogo';
+      const items = (p.items || []).map((item, idx) => {
         const filDots = (item.filamento || []).map(f => {
           const fil = filamentos.find(fi => fi.id === f.filamentoId);
           return fil ? `<span class="fil-swatch-sm" style="background:${fil.colorHex}" title="${fil.color}: ${f.gramos}g"></span>` : '';
@@ -703,30 +751,41 @@
         <div class="pedido-item">
           <span class="pedido-item-name">${item.nombre}</span>
           <span class="pedido-item-qty">x${item.cantidad}</span>
+          ${item.precio ? `<span class="pedido-item-price">$${item.precio.toLocaleString('es-AR')}</span>` : ''}
           <span class="pedido-item-grams">${filDots}</span>
           <div class="pedido-item-controls">
-            <button class="qty-btn-sm" data-pedido="${p.id}" data-item-idx="${(p.items || []).indexOf(item)}" data-action="minus">−</button>
-            <button class="qty-btn-sm" data-pedido="${p.id}" data-item-idx="${(p.items || []).indexOf(item)}" data-action="plus">+</button>
+            <button class="qty-btn-sm" data-pedido="${p.id}" data-item-idx="${idx}" data-action="minus">−</button>
+            <button class="qty-btn-sm" data-pedido="${p.id}" data-item-idx="${idx}" data-action="plus">+</button>
           </div>
         </div>
       `}).join('');
+
+      const totalPedido = (p.items || []).reduce((s, item) => s + ((item.precio || 0) * (item.cantidad || 1)), 0);
 
       return `
         <div class="pedido-card">
           <div class="pedido-header">
             <span class="pedido-fecha">${fecha}</span>
+            <span class="pedido-origin">${origenLabel}</span>
+            ${p.cliente ? `<span class="pedido-cliente">👤 ${p.cliente}</span>` : ''}
             <span class="pedido-badge ${estadoClass}">${p.estado}</span>
           </div>
+          ${p.nota ? `<div class="pedido-nota" style="color:var(--text-muted);font-size:0.85rem;padding:4px 12px;font-style:italic;">${p.nota}</div>` : ''}
           <div class="pedido-items">${items}</div>
+          ${totalPedido > 0 ? `<div class="pedido-total" style="text-align:right;padding:8px 12px;font-weight:700;color:var(--accent);">Total: $${totalPedido.toLocaleString('es-AR')}</div>` : ''}
           <div class="pedido-footer">
             <div class="pedido-actions">
               <button class="btn-secondary btn-sm" data-pedido-delete="${p.id}">Eliminar</button>
               ${p.estado === 'pendiente' ? `<button class="btn-primary btn-sm" data-pedido-confirm="${p.id}">Confirmar</button>` : ''}
+              ${p.estado === 'confirmado' ? `<button class="btn-secondary btn-sm" data-pedido-complete="${p.id}">Completar</button>` : ''}
             </div>
           </div>
         </div>
       `;
     }).join('');
+
+    container.innerHTML = html;
+    document.getElementById('btnNewPedido')?.addEventListener('click', openManualOrderForm);
 
     container.querySelectorAll('[data-action]').forEach(btn => {
       btn.addEventListener('click', async () => {
@@ -766,6 +825,14 @@
       });
     });
 
+    container.querySelectorAll('[data-pedido-complete]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        await FirebaseDB.updatePedido(btn.dataset.pedidoComplete, { estado: 'completado' });
+        showToast('Pedido marcado como completado');
+        renderPedidosPage();
+      });
+    });
+
     container.querySelectorAll('[data-pedido-delete]').forEach(btn => {
       btn.addEventListener('click', async () => {
         if (!confirm('¿Eliminar este pedido?')) return;
@@ -773,6 +840,156 @@
         showToast('Pedido eliminado');
         renderPedidosPage();
       });
+    });
+  }
+
+  function openManualOrderForm() {
+    manualOrderItems = [];
+    const allProducts = [];
+    secciones.forEach(sec => {
+      (sec.productos || []).forEach(p => {
+        allProducts.push({ ...p, seccionNombre: sec.nombre });
+      });
+    });
+
+    const markup = appConfig.markup || 3;
+    const costoGramo = appConfig.costoGramo || 25;
+    const costoHora = appConfig.costoHora || 15;
+
+    function calcPrecio(product) {
+      const totalG = (product.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
+      const tiempo = product.tiempoImpresion || { horas: 0, minutos: 0 };
+      const horas = (tiempo.horas || 0) + ((tiempo.minutos || 0) / 60);
+      return Math.round(((totalG * costoGramo) + (horas * costoHora)) * markup);
+    }
+
+    const productOptions = allProducts.map(p => {
+      const precio = calcPrecio(p);
+      return `<option value="${p.id}" data-precio="${precio}">${p.nombre} (${p.seccionNombre}) ${precio > 0 ? '- $' + precio.toLocaleString('es-AR') : ''}</option>`;
+    }).join('');
+
+    $('#modalFormTitle').textContent = 'Crear pedido manual';
+    $('#modalFormContent').innerHTML = `
+      <div class="form-group">
+        <label for="pedidoCliente">Cliente (nombre o teléfono)</label>
+        <input type="text" id="pedidoCliente" placeholder="Ej: Juan, 1155551234">
+      </div>
+      <div class="form-group">
+        <label for="pedidoOrigen">Origen del pedido</label>
+        <select id="pedidoOrigen">
+          <option value="whatsapp">📱 WhatsApp</option>
+          <option value="instagram">📸 Instagram</option>
+          <option value="manual">📝 Manual / Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="pedidoNota">Nota / Observaciones</label>
+        <textarea id="pedidoNota" placeholder="Ej: Color azul, entrega el viernes..."></textarea>
+      </div>
+      <div class="form-group" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
+        <label>Productos</label>
+        <div id="manualOrderItemsList" style="margin-bottom:12px;"></div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="pedidoProductSelect" style="flex:1;">
+            <option value="">-- Seleccionar producto del catálogo --</option>
+            ${productOptions}
+          </select>
+          <input type="number" id="pedidoProductQty" value="1" min="1" style="width:70px;" placeholder="Cant.">
+          <button class="btn-primary" id="btnAddProductToOrder">+ Agregar</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+          <input type="text" id="pedidoCustomName" placeholder="Producto custom (fuera del catálogo)" style="flex:1;">
+          <input type="number" id="pedidoCustomPrice" placeholder="Precio $" min="0" style="width:100px;">
+          <input type="number" id="pedidoCustomQty" value="1" min="1" style="width:70px;">
+          <button class="btn-secondary" id="btnAddCustomItem">+ Custom</button>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" id="formPedidoSave">Crear pedido</button>
+        <button class="btn-secondary" id="formPedidoCancel">Cancelar</button>
+      </div>
+    `;
+    $('#modalFormOverlay').classList.add('active');
+
+    function renderManualOrderItems() {
+      const list = document.getElementById('manualOrderItemsList');
+      if (!list) return;
+      if (manualOrderItems.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Sin productos agregados</p>';
+        return;
+      }
+      const total = manualOrderItems.reduce((s, item) => s + (item.precio * item.cantidad), 0);
+      list.innerHTML = manualOrderItems.map((item, i) => `
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+          <span style="flex:1;">${item.nombre}</span>
+          <span style="color:var(--text-muted);">x${item.cantidad}</span>
+          <span style="color:var(--accent);font-weight:600;">$${(item.precio * item.cantidad).toLocaleString('es-AR')}</span>
+          <button class="btn-delete btn-sm" data-remove-item="${i}" style="padding:2px 8px;">✕</button>
+        </div>
+      `).join('') + `<div style="text-align:right;padding-top:8px;font-weight:700;color:var(--accent);">Total: $${total.toLocaleString('es-AR')}</div>`;
+
+      list.querySelectorAll('[data-remove-item]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          manualOrderItems.splice(parseInt(btn.dataset.removeItem), 1);
+          renderManualOrderItems();
+        });
+      });
+    }
+
+    document.getElementById('btnAddProductToOrder')?.addEventListener('click', () => {
+      const select = document.getElementById('pedidoProductSelect');
+      const qty = parseInt(document.getElementById('pedidoProductQty').value) || 1;
+      if (!select.value) return;
+      const option = select.options[select.selectedIndex];
+      const precio = parseInt(option.dataset.precio) || 0;
+      manualOrderItems.push({ nombre: option.text.split(' (')[0], productId: select.value, precio, cantidad: qty, custom: false });
+      select.value = '';
+      document.getElementById('pedidoProductQty').value = '1';
+      renderManualOrderItems();
+    });
+
+    document.getElementById('btnAddCustomItem')?.addEventListener('click', () => {
+      const name = document.getElementById('pedidoCustomName').value.trim();
+      const price = parseInt(document.getElementById('pedidoCustomPrice').value) || 0;
+      const qty = parseInt(document.getElementById('pedidoCustomQty').value) || 1;
+      if (!name) return;
+      manualOrderItems.push({ nombre: name, precio: price, cantidad: qty, custom: true });
+      document.getElementById('pedidoCustomName').value = '';
+      document.getElementById('pedidoCustomPrice').value = '';
+      document.getElementById('pedidoCustomQty').value = '1';
+      renderManualOrderItems();
+    });
+
+    document.getElementById('formPedidoCancel')?.addEventListener('click', closeForm);
+    $('#modalFormOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeForm(); });
+
+    document.getElementById('formPedidoSave')?.addEventListener('click', async () => {
+      if (manualOrderItems.length === 0) {
+        showToast('Agregá al menos un producto', true);
+        return;
+      }
+      const pedido = {
+        cliente: document.getElementById('pedidoCliente').value.trim(),
+        origen: document.getElementById('pedidoOrigen').value,
+        nota: document.getElementById('pedidoNota').value.trim(),
+        items: manualOrderItems.map(item => ({
+          nombre: item.nombre,
+          productId: item.productId || null,
+          cantidad: item.cantidad,
+          precio: item.precio,
+          filamento: []
+        })),
+        estado: 'pendiente',
+        fecha: new Date().toISOString()
+      };
+      try {
+        await FirebaseDB.savePedido(pedido);
+        closeForm();
+        renderPedidosPage();
+        showToast('Pedido manual creado');
+      } catch (e) {
+        showToast('Error: ' + e.message, true);
+      }
     });
   }
 

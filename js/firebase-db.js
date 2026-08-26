@@ -35,7 +35,7 @@ const FirebaseDB = (() => {
         return data;
       }
     } catch (e) { /* ignore */ }
-    return { whatsapp: { numero: '5493535630595' }, catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: 'https://www.youtube.com/embed/V8hpJz5eX38' }, costoGramo: 25, markup: 3 };
+    return { whatsapp: { numero: '5493535630595' }, catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: 'https://www.youtube.com/embed/V8hpJz5eX38' }, costoGramo: 25, costoHora: 15, markup: 3 };
   }
 
   async function saveConfig(data) {
@@ -243,6 +243,7 @@ const FirebaseDB = (() => {
       whatsapp: { numero: '5493535630595' },
       catalogo: { nombre: 'Luck VM', subtitulo: 'Catálogo de Productos • Impresión Creativa', videoUrl: 'https://www.youtube.com/embed/V8hpJz5eX38' },
       costoGramo: 25,
+      costoHora: 15,
       markup: 3
     });
 
