@@ -564,6 +564,7 @@
   ];
   const CALC_FILAMENTO = 25;
   const CALC_ELECTRICIDAD = 15;
+  const CALC_MANO_OBRA = 30;
   let calcComponents = [];
 
   function calcFmt(n) {
@@ -586,17 +587,30 @@
           <div class="calc-result" id="resultFilamento">${calcFmt(0)}</div>
         </div>
         <div class="calc-card">
-          <h3>Electricidad</h3>
+          <h3>Tiempo de impresión</h3>
           <div class="calc-field">
-            <label>Tiempo de impresión</label>
+            <label>Duración</label>
             <div class="calc-time">
               <input type="number" id="calcHours" value="0" min="0" max="99" placeholder="hs">
               <span>:</span>
               <input type="number" id="calcMinutes" value="0" min="0" max="59" placeholder="min">
             </div>
-            <span class="calc-sub">BambuLab A1 ~100W · ${calcFmt(CALC_ELECTRICIDAD)}/hora</span>
+            <span class="calc-sub">Electricidad ${calcFmt(CALC_ELECTRICIDAD)}/hora<br>Costo se calcula por horas ingresadas</span>
           </div>
-          <div class="calc-result" id="resultElectricidad">${calcFmt(0)}</div>
+          <div class="calc-result" id="resultTiempo">${calcFmt(0)} <span style="font-size:0.75rem;opacity:0.7;">(electricidad)</span></div>
+        </div>
+        <div class="calc-card">
+          <h3>Mano de obra</h3>
+          <div class="calc-field">
+            <label>Horas de producción</label>
+            <div class="calc-time">
+              <input type="number" id="calcWorkHours" value="0" min="0" max="99" placeholder="hs">
+              <span>:</span>
+              <input type="number" id="calcWorkMinutes" value="0" min="0" max="59" placeholder="min">
+            </div>
+            <span class="calc-sub">${calcFmt(CALC_MANO_OBRA)}/hora de trabajo</span>
+          </div>
+          <div class="calc-result" id="resultManoObra">${calcFmt(0)}</div>
         </div>
         <div class="calc-card calc-card-wide">
           <h3>Componentes</h3>
@@ -617,15 +631,25 @@
           </div>
           <div class="calc-result" id="resultComponentes">${calcFmt(0)}</div>
         </div>
+        <div class="calc-card calc-card-wide">
+          <h3>Riesgo de fallo</h3>
+          <div class="calc-field">
+            <label>Porcentaje estimado de fallos en impresión (%)</label>
+            <input type="number" id="calcFallo" value="10" min="0" max="100" step="1">
+            <span class="calc-sub">Recarga % sobre filamento + componentes + producción (impresiones descartadas, re-trabajos)</span>
+          </div>
+          <div class="calc-sub" style="margin-top:8px;color:var(--accent-green);font-weight:600;" id="calcFalloInfo"></div>
+        </div>
       </div>
       <div class="calc-total">
-        <span>COSTO TOTAL ESTIMADO</span>
+        <span>COSTO TOTAL ESTIMADO <span style="font-size:0.8rem;opacity:0.7;" id="calcTotalBreakdown"></span></span>
         <span class="calc-total-value" id="resultTotal">${calcFmt(0)}</span>
       </div>
     `;
 
-    ['calcGrams', 'calcHours', 'calcMinutes'].forEach(id => {
+    ['calcGrams', 'calcHours', 'calcMinutes', 'calcWorkHours', 'calcWorkMinutes', 'calcFallo'].forEach(id => {
       document.getElementById(id).addEventListener('input', calcUpdate);
+      document.getElementById(id).addEventListener('keydown', (e) => { if (e.target.id === 'calcGrams') return; });
     });
 
     document.querySelectorAll('.btn-preset').forEach(btn => {
@@ -698,15 +722,29 @@
     const hours = parseFloat(document.getElementById('calcHours')?.value) || 0;
     const minutes = parseFloat(document.getElementById('calcMinutes')?.value) || 0;
     const totalHours = hours + (minutes / 60);
+
+    const workHours = parseFloat(document.getElementById('calcWorkHours')?.value) || 0;
+    const workMinutes = parseFloat(document.getElementById('calcWorkMinutes')?.value) || 0;
+    const totalWorkHours = workHours + (workMinutes / 60);
+
+    const falloPct = parseFloat(document.getElementById('calcFallo')?.value) || 0;
+
     const cFil = grams * CALC_FILAMENTO;
     const cElec = totalHours * CALC_ELECTRICIDAD;
+    const cManoObra = totalWorkHours * CALC_MANO_OBRA;
     const cComp = calcComponents.reduce((s, c) => s + (c.cost * c.qty), 0);
-    const total = cFil + cElec + cComp;
+
+    const subTotal = cFil + cElec + cManoObra + cComp;
+    const cFallo = subTotal * (falloPct / 100);
+    const total = subTotal + cFallo;
 
     document.getElementById('resultFilamento').textContent = calcFmt(cFil);
-    document.getElementById('resultElectricidad').textContent = calcFmt(cElec);
+    document.getElementById('resultTiempo').textContent = calcFmt(cElec) + ' <span style="font-size:0.75rem;opacity:0.7;">(' + totalHours.toFixed(1).replace('.', ',') + 'hs)</span>';
+    document.getElementById('resultManoObra').textContent = calcFmt(cManoObra) + ' <span style="font-size:0.75rem;opacity:0.7;">(' + totalWorkHours.toFixed(1).replace('.', ',') + 'hs)</span>';
     document.getElementById('resultComponentes').textContent = calcFmt(cComp);
+    document.getElementById('calcFalloInfo').textContent = `Recargo por fallos (${falloPct}%): +${calcFmt(cFallo)}`;
     document.getElementById('resultTotal').textContent = calcFmt(total);
+    document.getElementById('calcTotalBreakdown').textContent = `filamento ${calcFmt(cFil)} + tiempo ${calcFmt(cElec)} + mano de obra ${calcFmt(cManoObra)} + componentes ${calcFmt(cComp)} + fallos ${calcFmt(cFallo)}`;
   }
 
   // ===== PEDIDOS =====
