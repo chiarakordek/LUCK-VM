@@ -575,7 +575,34 @@
     const container = document.getElementById('calculatorContent');
     if (!container) return;
 
+    const allProducts = [];
+    secciones.forEach(sec => {
+      (sec.productos || []).forEach(p => {
+        const totalG = (p.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
+        allProducts.push({ ...p, seccionNombre: sec.nombre, totalG });
+      });
+    });
+    allProducts.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    const productOptions = allProducts.map(p => {
+      const t = p.tiempoImpresion || {};
+      const hs = (t.horas || 0) + ((t.minutos || 0) / 60);
+      const info = `${p.totalG > 0 ? p.totalG + 'g' : '¿?'} · ${hs > 0 ? hs.toFixed(1).replace('.', ',') + 'hs' : '¿?'}`;
+      return `<option value="${p.id}" data-grams="${p.totalG || 0}" data-hours="${t.horas || 0}" data-minutes="${t.minutos || 0}" data-sec="${p._sectionId || ''}" data-nombre="${p.nombre}">${p.nombre} — ${p.seccionNombre} (${info})</option>`;
+    }).join('');
+
     container.innerHTML = `
+      <div class="calc-product-select">
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>Producto del catálogo</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <select id="calcProductSelect" style="flex:1;">
+              <option value="">-- Seleccionar manual o elegir producto --</option>
+              ${productOptions}
+            </select>
+            <span class="calc-sub" id="calcProductInfo" style="white-space:nowrap;"></span>
+          </div>
+        </div>
+      </div>
       <div class="calc-grid">
         <div class="calc-card">
           <h3>Filamento</h3>
@@ -651,6 +678,23 @@
       document.getElementById(id).addEventListener('input', calcUpdate);
       document.getElementById(id).addEventListener('keydown', (e) => { if (e.target.id === 'calcGrams') return; });
     });
+
+    const productSelect = document.getElementById('calcProductSelect');
+    if (productSelect) {
+      productSelect.addEventListener('change', () => {
+        const opt = productSelect.selectedOptions[0];
+        if (!opt || !opt.value) {
+          document.getElementById('calcProductInfo').textContent = '';
+          return;
+        }
+        document.getElementById('calcGrams').value = opt.dataset.grams || 0;
+        document.getElementById('calcHours').value = opt.dataset.hours || 0;
+        document.getElementById('calcMinutes').value = opt.dataset.minutes || 0;
+        const infoHs = (parseFloat(opt.dataset.hours || 0) + ((parseFloat(opt.dataset.minutes || 0)) / 60)).toFixed(2).replace('.', ',');
+        document.getElementById('calcProductInfo').textContent = `${opt.dataset.nombre}: ${opt.dataset.grams || 0}g · ${infoHs}hs`;
+        calcUpdate();
+      });
+    }
 
     document.querySelectorAll('.btn-preset').forEach(btn => {
       btn.addEventListener('click', () => {

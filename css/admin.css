@@ -659,6 +659,14 @@ body {
   margin-bottom: 24px;
 }
 
+.calc-product-select {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
 .calc-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
