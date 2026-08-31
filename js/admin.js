@@ -666,6 +666,22 @@
             <span class="calc-sub">Recarga % sobre filamento + componentes + producción (impresiones descartadas, re-trabajos)</span>
           </div>
           <div class="calc-sub" style="margin-top:8px;color:var(--accent-green);font-weight:600;" id="calcFalloInfo"></div>
+
+          <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:16px;">
+            <label style="font-weight:600;margin-bottom:8px;display:block;">Registro de fallos (para calcular el % sugerido)</label>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <div>
+                <label style="font-size:0.8rem;color:var(--text-muted);">Impresiones totales</label>
+                <input type="number" id="calcTotalImpresiones" value="0" min="0" placeholder="Ej: 20" style="width:90px;">
+              </div>
+              <div>
+                <label style="font-size:0.8rem;color:var(--text-muted);">Falladas</label>
+                <input type="number" id="calcFallasImpresiones" value="0" min="0" placeholder="Ej: 2" style="width:90px;">
+              </div>
+              <button class="btn-secondary btn-sm" id="btnAplicarRiesgo">Aplicar % calculado</button>
+            </div>
+            <div class="calc-sub" style="margin-top:8px;" id="calcRiesgoSugerido"></div>
+          </div>
         </div>
       </div>
       <div class="calc-total">
@@ -678,6 +694,26 @@
       document.getElementById(id).addEventListener('input', calcUpdate);
       document.getElementById(id).addEventListener('keydown', (e) => { if (e.target.id === 'calcGrams') return; });
     });
+
+    ['calcTotalImpresiones', 'calcFallasImpresiones'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calcRiesgoSugerido);
+    });
+
+    const btnRiesgo = document.getElementById('btnAplicarRiesgo');
+    if (btnRiesgo) {
+      btnRiesgo.addEventListener('click', () => {
+        const total = parseInt(document.getElementById('calcTotalImpresiones').value) || 0;
+        const fallas = parseInt(document.getElementById('calcFallasImpresiones').value) || 0;
+        if (total <= 0) { showToast('Ingresá el total de impresiones', true); return; }
+        const pct = Math.round((fallas / total) * 100);
+        document.getElementById('calcFallo').value = pct;
+        calcRiesgoSugerido();
+        calcUpdate();
+        showToast(`Riesgo de fallos aplicado: ${pct}%`);
+      });
+    }
+
+    calcRiesgoSugerido();
 
     const productSelect = document.getElementById('calcProductSelect');
     if (productSelect) {
@@ -759,6 +795,22 @@
         calcUpdate();
       });
     });
+  }
+
+  function calcRiesgoSugerido() {
+    const totalEl = document.getElementById('calcTotalImpresiones');
+    const fallasEl = document.getElementById('calcFallasImpresiones');
+    const infoEl = document.getElementById('calcRiesgoSugerido');
+    if (!totalEl || !fallasEl || !infoEl) return;
+    const total = parseInt(totalEl.value) || 0;
+    const fallas = parseInt(fallasEl.value) || 0;
+    if (total <= 0) {
+      infoEl.textContent = 'Ingresá el total de impresiones para calcular el % sugerido.';
+      return;
+    }
+    const fallasClamp = Math.min(fallas, total);
+    const pct = Math.round((fallasClamp / total) * 100);
+    infoEl.textContent = `Tasa de fallos: ${fallasClamp}/${total} = ${pct}%. Hacé clic en "Aplicar % calculado" para usarlo.`;
   }
 
   function calcUpdate() {
