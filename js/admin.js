@@ -834,8 +834,8 @@
     const total = subTotal + cFallo;
 
     document.getElementById('resultFilamento').textContent = calcFmt(cFil);
-    document.getElementById('resultTiempo').textContent = calcFmt(cElec) + ' <span style="font-size:0.75rem;opacity:0.7;">(' + totalHours.toFixed(1).replace('.', ',') + 'hs)</span>';
-    document.getElementById('resultManoObra').textContent = calcFmt(cManoObra) + ' <span style="font-size:0.75rem;opacity:0.7;">(' + totalWorkHours.toFixed(1).replace('.', ',') + 'hs)</span>';
+    document.getElementById('resultTiempo').innerHTML = calcFmt(cElec) + ' <span style="font-size:0.75rem;opacity:0.7;">(' + totalHours.toFixed(1).replace('.', ',') + 'hs)</span>';
+    document.getElementById('resultManoObra').innerHTML = calcFmt(cManoObra) + ' <span style="font-size:0.75rem;opacity:0.7;">(' + totalWorkHours.toFixed(1).replace('.', ',') + 'hs)</span>';
     document.getElementById('resultComponentes').textContent = calcFmt(cComp);
     document.getElementById('calcFalloInfo').textContent = `Recargo por fallos (${falloPct}%): +${calcFmt(cFallo)}`;
     document.getElementById('resultTotal').textContent = calcFmt(total);
