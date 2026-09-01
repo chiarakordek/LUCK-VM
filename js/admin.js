@@ -685,13 +685,21 @@
         </div>
       </div>
 
+      <div class="calc-extra">
+        <label for="calcExtra">Extra / adicional ($)</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="number" id="calcExtra" value="0" min="0" placeholder="Ej: 2500 si el costo no justifica el valor de mercado">
+          <span class="calc-sub">Sumá la diferencia cuando el costo calculado no alcance el precio deseado (ej. piezas que tardan muchas horas)</span>
+        </div>
+      </div>
+
       <div class="calc-total">
         <span>COSTO TOTAL ESTIMADO <span style="font-size:0.8rem;opacity:0.7;" id="calcTotalBreakdown"></span></span>
         <span class="calc-total-value" id="resultTotal">${calcFmt(0)}</span>
       </div>
     `;
 
-    ['calcGrams', 'calcHours', 'calcMinutes', 'calcWorkHours', 'calcWorkMinutes', 'calcFallo'].forEach(id => {
+    ['calcGrams', 'calcHours', 'calcMinutes', 'calcWorkHours', 'calcWorkMinutes', 'calcFallo', 'calcExtra'].forEach(id => {
       document.getElementById(id).addEventListener('input', calcUpdate);
       document.getElementById(id).addEventListener('keydown', (e) => { if (e.target.id === 'calcGrams') return; });
     });
@@ -825,6 +833,7 @@
     const totalWorkHours = workHours + (workMinutes / 60);
 
     const falloPct = parseFloat(document.getElementById('calcFallo')?.value) || 0;
+    const extra = parseFloat(document.getElementById('calcExtra')?.value) || 0;
 
     const cFil = grams * CALC_FILAMENTO;
     const cElec = totalHours * CALC_ELECTRICIDAD;
@@ -833,7 +842,7 @@
 
     const subTotal = cFil + cElec + cManoObra + cComp;
     const cFallo = subTotal * (falloPct / 100);
-    const total = subTotal + cFallo;
+    const total = subTotal + cFallo + extra;
 
     document.getElementById('resultFilamento').textContent = calcFmt(cFil);
     document.getElementById('resultTiempo').innerHTML = calcFmt(cElec) + ' <span style="font-size:0.75rem;opacity:0.7;">(' + totalHours.toFixed(1).replace('.', ',') + 'hs)</span>';
@@ -841,7 +850,7 @@
     document.getElementById('resultComponentes').textContent = calcFmt(cComp);
     document.getElementById('calcFalloInfo').textContent = `Recargo por fallos (${falloPct}%): +${calcFmt(cFallo)}`;
     document.getElementById('resultTotal').textContent = calcFmt(total);
-    document.getElementById('calcTotalBreakdown').textContent = `filamento ${calcFmt(cFil)} + tiempo ${calcFmt(cElec)} + mano de obra ${calcFmt(cManoObra)} + componentes ${calcFmt(cComp)} + fallos ${calcFmt(cFallo)}`;
+    document.getElementById('calcTotalBreakdown').textContent = `filamento ${calcFmt(cFil)} + tiempo ${calcFmt(cElec)} + mano de obra ${calcFmt(cManoObra)} + componentes ${calcFmt(cComp)} + fallos ${calcFmt(cFallo)}${extra > 0 ? ' + extra ' + calcFmt(extra) : ''}`;
   }
 
   // ===== PEDIDOS =====

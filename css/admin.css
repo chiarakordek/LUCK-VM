@@ -891,6 +891,35 @@ body {
   background: rgba(239, 83, 80, 0.1) !important;
 }
 
+.calc-extra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  margin-bottom: 16px;
+}
+
+.calc-extra label {
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--accent-gold);
+}
+
+.calc-extra input {
+  width: 160px;
+}
+
+@media (max-width: 640px) {
+  .calc-extra {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 .calc-total {
   display: flex;
   justify-content: space-between;
