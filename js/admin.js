@@ -590,21 +590,9 @@
     }).join('');
 
     container.innerHTML = `
-      <div class="calc-product-select">
-        <div class="form-group" style="margin-bottom:16px;">
-          <label>Producto del catálogo</label>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <select id="calcProductSelect" style="flex:1;">
-              <option value="">-- Seleccionar manual o elegir producto --</option>
-              ${productOptions}
-            </select>
-            <span class="calc-sub" id="calcProductInfo" style="white-space:nowrap;"></span>
-          </div>
-        </div>
-      </div>
       <div class="calc-grid">
         <div class="calc-card">
-          <h3>Filamento</h3>
+          <h3>1. Filamento</h3>
           <div class="calc-field">
             <label>Gramos utilizados</label>
             <input type="number" id="calcGrams" value="0" min="0" step="1">
@@ -613,20 +601,20 @@
           <div class="calc-result" id="resultFilamento">${calcFmt(0)}</div>
         </div>
         <div class="calc-card">
-          <h3>Tiempo de impresión</h3>
+          <h3>2. Horas consumidas</h3>
           <div class="calc-field">
-            <label>Duración</label>
+            <label>Tiempo de impresión</label>
             <div class="calc-time">
               <input type="number" id="calcHours" value="0" min="0" max="99" placeholder="hs">
               <span>:</span>
               <input type="number" id="calcMinutes" value="0" min="0" max="59" placeholder="min">
             </div>
-            <span class="calc-sub">Electricidad ${calcFmt(CALC_ELECTRICIDAD)}/hora<br>Costo se calcula por horas ingresadas</span>
+            <span class="calc-sub">Electricidad ${calcFmt(CALC_ELECTRICIDAD)}/hora</span>
           </div>
           <div class="calc-result" id="resultTiempo">${calcFmt(0)} <span style="font-size:0.75rem;opacity:0.7;">(electricidad)</span></div>
         </div>
         <div class="calc-card">
-          <h3>Mano de obra</h3>
+          <h3>2b. Mano de obra</h3>
           <div class="calc-field">
             <label>Horas de producción</label>
             <div class="calc-time">
@@ -658,7 +646,7 @@
           <div class="calc-result" id="resultComponentes">${calcFmt(0)}</div>
         </div>
         <div class="calc-card calc-card-wide">
-          <h3>Riesgo de fallo</h3>
+          <h3>Fallos en medio de la impresión</h3>
           <div class="calc-field">
             <label>Porcentaje estimado de fallos en impresión (%)</label>
             <input type="number" id="calcFallo" value="10" min="0" max="100" step="1">
@@ -683,6 +671,20 @@
           </div>
         </div>
       </div>
+
+      <div class="calc-product-select">
+        <div class="form-group">
+          <label>Designar producto (opcional — autocompleta gramos y horas)</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <select id="calcProductSelect" style="flex:1;">
+              <option value="">-- Seleccionar manual o elegir producto --</option>
+              ${productOptions}
+            </select>
+            <span class="calc-sub" id="calcProductInfo" style="white-space:nowrap;"></span>
+          </div>
+        </div>
+      </div>
+
       <div class="calc-total">
         <span>COSTO TOTAL ESTIMADO <span style="font-size:0.8rem;opacity:0.7;" id="calcTotalBreakdown"></span></span>
         <span class="calc-total-value" id="resultTotal">${calcFmt(0)}</span>
