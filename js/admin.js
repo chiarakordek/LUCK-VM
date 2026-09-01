@@ -142,16 +142,20 @@
     const costoHora = appConfig.costoHora || 15;
     secciones.forEach(sec => {
       (sec.productos || []).forEach(p => {
-        const totalG = (p.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
+        const totalG = p.gramos !== undefined ? p.gramos : (p.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
         const tiempo = p.tiempoImpresion || { horas: 0, minutos: 0 };
         const horas = (tiempo.horas || 0) + ((tiempo.minutos || 0) / 60);
-        const precio = Math.round(((totalG * costoGramo) + (horas * costoHora)) * markup);
-        const precioStr = (totalG > 0 || horas > 0) ? `$${precio.toLocaleString('es-AR')}` : '-';
+        const precioAuto = Math.round(((totalG * costoGramo) + (horas * costoHora)) * markup);
+        const precio = p.precioMinorista || p.precioMayorista || (totalG > 0 || horas > 0 ? precioAuto : 0);
+        const precioStr = precio > 0 ? `$${precio.toLocaleString('es-AR')}` : '-';
+        const precioSub = p.precioMayorista && p.precioMinorista && p.precioMayorista !== p.precioMinorista
+          ? `<span style="display:block;font-size:0.7rem;color:var(--accent-gold);">Mayorista $${p.precioMayorista.toLocaleString('es-AR')}</span>`
+          : '';
         rows += `
           <tr>
             <td><img class="col-img" src="${p.imagen}?v=2" alt="${p.nombre}"></td>
             <td><strong>${p.nombre}</strong><br><span style="color:var(--text-muted);font-size:0.8rem;">${sec.nombre}</span></td>
-            <td style="text-align:center;font-weight:700;color:var(--accent);">${precioStr}</td>
+            <td style="text-align:center;font-weight:700;color:var(--accent);">${precioStr}${precioSub}</td>
             <td class="col-actions">
               <button class="btn-edit" data-edit="${p.id}" data-sec="${sec.id}">Editar</button>
               <button class="btn-delete" data-delete="${p.id}" data-sec="${sec.id}">Eliminar</button>
@@ -210,20 +214,7 @@
       `<option value="${s.id}" ${product && product._sectionId === s.id ? 'selected' : ''}>${s.nombre}</option>`
     ).join('');
 
-    const productFilamento = product?.filamento || [];
-    const filamentoRows = filamentos.map(f => {
-      const entry = productFilamento.find(pf => pf.filamentoId === f.id);
-      return `
-        <div class="fil-row" data-fil-id="${f.id}">
-          <span class="fil-swatch" style="background:${f.colorHex}"></span>
-          <span class="fil-name">${f.color}</span>
-          <input type="number" class="fil-grams-input" data-fil="${f.id}" value="${entry ? entry.gramos : 0}" min="0" placeholder="0">
-          <span class="fil-unit">g</span>
-        </div>
-      `;
-    }).join('');
-
-    const totalGrams = productFilamento.reduce((s, f) => s + (f.gramos || 0), 0);
+    const totalGrams = product?.gramos !== undefined ? product.gramos : (product?.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
     const markup = appConfig.markup || 3;
     const costoGramo = appConfig.costoGramo || 25;
     const costoHora = appConfig.costoHora || 15;
@@ -251,6 +242,11 @@
         <input type="text" id="formImagen" value="${product?.imagen || 'images/'}" placeholder="images/archivo.png">
       </div>
       <div class="form-group">
+        <label for="formGramos">Gramos de filamento (total)</label>
+        <input type="number" id="formGramos" value="${totalGrams}" min="0" placeholder="0">
+        <span style="color:var(--text-muted);font-size:0.8rem;">Costo filamento: $${costoGramo}/g</span>
+      </div>
+      <div class="form-group">
         <label>Tiempo de impresión</label>
         <div style="display:flex;gap:8px;align-items:center;">
           <input type="number" id="formHoras" value="${horasVal}" min="0" max="99" placeholder="0" style="width:80px;">
@@ -258,13 +254,29 @@
           <input type="number" id="formMinutos" value="${minutosVal}" min="0" max="59" placeholder="0" style="width:80px;">
           <span>min</span>
         </div>
-        <span style="color:var(--text-muted);font-size:0.8rem;">BambuLab A1 ~100W · $${costoHora}/hora</span>
+        <span style="color:var(--text-muted);font-size:0.8rem;">Electricidad $${costoHora}/hora</span>
       </div>
-      <div class="form-group">
-        <label>Filamento por producto <span id="formFilTotal" style="color:var(--accent);font-weight:600;">(${totalGrams}g total)</span>
-          <span id="formPrecioEst" style="color:var(--gold);font-weight:600;margin-left:12px;">→ $${precioEstimado.toLocaleString('es-AR')} (fil: ${Math.round(totalGrams * costoGramo * markup)} + tiempo: ${Math.round(horasDec * costoHora * markup)} = ${precioEstimado.toLocaleString('es-AR')})</span>
-        </label>
-        <div class="fil-grid">${filamentoRows}</div>
+      <div style="border-top:1px solid rgba(255,255,255,0.1);margin:16px 0;padding-top:16px;">
+        <label style="font-weight:700;color:var(--gold);margin-bottom:12px;display:block;">💰 Precios</label>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div class="form-group" style="flex:1;min-width:140px;">
+            <label for="formCosto">Costo de producción ($)</label>
+            <input type="number" id="formCosto" value="${product?.costo || ''}" min="0" placeholder="0">
+          </div>
+          <div class="form-group" style="flex:1;min-width:140px;">
+            <label for="formMayorista">Precio Mayorista ($)</label>
+            <input type="number" id="formMayorista" value="${product?.precioMayorista || ''}" min="0" placeholder="0">
+          </div>
+          <div class="form-group" style="flex:1;min-width:140px;">
+            <label for="formMinorista">Precio Minorista ($)</label>
+            <input type="number" id="formMinorista" value="${product?.precioMinorista || ''}" min="0" placeholder="0">
+          </div>
+          <div class="form-group" style="flex:1;min-width:140px;">
+            <label for="formExtra">Extra / adicional ($)</label>
+            <input type="number" id="formExtra" value="${product?.extra || ''}" min="0" placeholder="0">
+          </div>
+        </div>
+        <span id="formPrecioEst" style="color:var(--accent);font-weight:600;display:block;margin-top:8px;">→ Est. fórmula: $${precioEstimado.toLocaleString('es-AR')}</span>
       </div>
       <div class="form-actions">
         <button class="btn-primary" id="formSave">${isEdit ? 'Guardar cambios' : 'Crear producto'}</button>
@@ -279,9 +291,7 @@
       $('#formSeccion').value = product._sectionId;
     }
 
-    document.querySelectorAll('.fil-grams-input').forEach(inp => {
-      inp.addEventListener('input', updateFormPrice);
-    });
+    $('#formGramos').addEventListener('input', updateFormPrice);
     $('#formHoras').addEventListener('input', updateFormPrice);
     $('#formMinutos').addEventListener('input', updateFormPrice);
 
@@ -291,19 +301,17 @@
     });
 
     function updateFormPrice() {
-      let total = 0;
-      document.querySelectorAll('.fil-grams-input').forEach(i => total += parseInt(i.value) || 0);
+      const total = parseInt($('#formGramos').value) || 0;
       const hrs = parseInt($('#formHoras').value) || 0;
       const mins = parseInt($('#formMinutos').value) || 0;
       const hDec = hrs + (mins / 60);
-      $('#formFilTotal').textContent = `(${total}g total)`;
       const mk = appConfig.markup || 3;
       const cg = appConfig.costoGramo || 25;
       const ch = appConfig.costoHora || 15;
       const precioFil = total * cg;
       const precioTiempo = hDec * ch;
       const precio = Math.round((precioFil + precioTiempo) * mk);
-      $('#formPrecioEst').textContent = `→ $${precio.toLocaleString('es-AR')} (fil: ${Math.round(precioFil * mk)} + tiempo: ${Math.round(precioTiempo * mk)})`;
+      $('#formPrecioEst').textContent = `→ Est. fórmula: $${precio.toLocaleString('es-AR')} (fil: ${Math.round(precioFil * mk)} + tiempo: ${Math.round(precioTiempo * mk)})`;
     }
 
     $('#formSave').addEventListener('click', async () => {
@@ -317,23 +325,19 @@
         return;
       }
 
-      const filamento = [];
-      document.querySelectorAll('.fil-grams-input').forEach(inp => {
-        const gramos = parseInt(inp.value) || 0;
-        if (gramos > 0) {
-          filamento.push({ filamentoId: inp.dataset.fil, gramos });
-        }
-      });
-
       const productData = {
         nombre,
         descripcion: desc,
         imagen,
-        filamento,
+        gramos: parseInt($('#formGramos').value) || 0,
         tiempoImpresion: {
           horas: parseInt($('#formHoras').value) || 0,
           minutos: parseInt($('#formMinutos').value) || 0
         },
+        costo: parseInt($('#formCosto').value) || 0,
+        precioMayorista: parseInt($('#formMayorista').value) || 0,
+        precioMinorista: parseInt($('#formMinorista').value) || 0,
+        extra: parseInt($('#formExtra').value) || 0,
         destacado: product?.destacado || false
       };
 
@@ -577,7 +581,7 @@
     const allProducts = [];
     secciones.forEach(sec => {
       (sec.productos || []).forEach(p => {
-        const totalG = (p.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
+        const totalG = p.gramos !== undefined ? p.gramos : (p.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
         allProducts.push({ ...p, seccionNombre: sec.nombre, totalG });
       });
     });
@@ -995,7 +999,7 @@
     const costoHora = appConfig.costoHora || 15;
 
     function calcPrecio(product) {
-      const totalG = (product.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
+      const totalG = product.gramos !== undefined ? product.gramos : (product.filamento || []).reduce((s, f) => s + (f.gramos || 0), 0);
       const tiempo = product.tiempoImpresion || { horas: 0, minutos: 0 };
       const horas = (tiempo.horas || 0) + ((tiempo.minutos || 0) / 60);
       return Math.round(((totalG * costoGramo) + (horas * costoHora)) * markup);
@@ -1183,7 +1187,12 @@
             nombre: p.nombre,
             descripcion: p.descripcion,
             imagen: p.imagen,
-            filamento: p.filamento || [],
+            gramos: p.gramos || 0,
+            tiempoImpresion: p.tiempoImpresion || { horas: 0, minutos: 0 },
+            costo: p.costo || 0,
+            precioMayorista: p.precioMayorista || 0,
+            precioMinorista: p.precioMinorista || 0,
+            extra: p.extra || 0,
             destacado: p.destacado || false
           }))
         })),

@@ -9,16 +9,24 @@ const CATALOGO_DATA = {
           id: "molde-sorrentino",
           nombre: "Molde para Sorrentinos",
           descripcion: "Molde 3D para preparar sorrentinos artesanales con corte y sellado.",
-          imagen: "images/molde-sorrentino.jpg",
-          filamento: [],
+          imagen: "images/molde-sorrentino.png",
+          gramos: 2770.4,
+          tiempoImpresion: { horas: 3, minutos: 20 },
+          costo: 3200,
+          precioMayorista: 6400,
+          precioMinorista: 9600,
           destacado: false
         },
         {
           id: "molde-ravioles",
           nombre: "Molde para Ravioles",
           descripcion: "Molde 3D para ravioles artesanales con corte y sellado en una sola operación.",
-          imagen: "images/molde-ravioles.jpg",
-          filamento: [],
+          imagen: "images/molde-ravioles.png",
+          gramos: 2623.97,
+          tiempoImpresion: { horas: 3, minutos: 55 },
+          costo: 4000,
+          precioMayorista: 8000,
+          precioMinorista: 12000,
           destacado: false
         },
         {
@@ -58,7 +66,11 @@ const CATALOGO_DATA = {
           nombre: "Basurero Portátil para Auto",
           descripcion: "Contenedor colgante para auto con cierre hermético anti-olores.",
           imagen: "images/basurero-auto.png",
-          filamento: [],
+          gramos: 6819.88,
+          tiempoImpresion: { horas: 7, minutos: 20 },
+          costo: 7200,
+          precioMayorista: 14400,
+          precioMinorista: 21600,
           destacado: false
         },
         {
@@ -66,7 +78,11 @@ const CATALOGO_DATA = {
           nombre: "Basurero Portátil para Auto Premium",
           descripcion: "Basurero auto premium con cierre hermético, asa de transporte y mayor capacidad.",
           imagen: "images/basurero-auto2.png",
-          filamento: [],
+          gramos: 3651.01,
+          tiempoImpresion: { horas: 4, minutos: 10 },
+          costo: 4100,
+          precioMayorista: 8200,
+          precioMinorista: 12300,
           destacado: false
         },
         {
@@ -74,7 +90,11 @@ const CATALOGO_DATA = {
           nombre: "Organizador de Escritorio Multi-compartimento",
           descripcion: "Caja organizadora con múltiples compartimentos para lápices, clips y accesorios.",
           imagen: "images/organizador-escritorio.png",
-          filamento: [],
+          gramos: 4472.95,
+          tiempoImpresion: { horas: 3, minutos: 45 },
+          costo: 4500,
+          precioMayorista: 9000,
+          precioMinorista: 13500,
           destacado: false
         },
         {
@@ -82,7 +102,11 @@ const CATALOGO_DATA = {
           nombre: "Organizador de Maquillaje Giratorio",
           descripcion: "Torre giratoria con múltiples niveles para cosméticos y pinceles.",
           imagen: "images/organizador-maquillaje.png",
-          filamento: [],
+          gramos: 3669.89,
+          tiempoImpresion: { horas: 3, minutos: 15 },
+          costo: 3700,
+          precioMayorista: 7400,
+          precioMinorista: 11100,
           destacado: false
         },
         {
@@ -90,7 +114,11 @@ const CATALOGO_DATA = {
           nombre: "Jabonera con Desagüe",
           descripcion: "Jabonera auto-drenante con superficie elevada y canaleta de escurrimiento.",
           imagen: "images/jabonera-desague.png",
-          filamento: [],
+          gramos: 811.22,
+          tiempoImpresion: { horas: 1, minutos: 50 },
+          costo: 2000,
+          precioMayorista: 4000,
+          precioMinorista: 6000,
           destacado: false
         },
         {
@@ -114,7 +142,11 @@ const CATALOGO_DATA = {
           nombre: "Compartimiento para Huevos",
           descripcion: "Bandejita organizadora para guardar huevos en la heladera de forma segura.",
           imagen: "images/compartimiento-huevos.png",
-          filamento: [],
+          gramos: 6735.7,
+          tiempoImpresion: { horas: 5, minutos: 50 },
+          costo: 6750,
+          precioMayorista: 13500,
+          precioMinorista: 20250,
           destacado: false
         },
         {
@@ -122,7 +154,11 @@ const CATALOGO_DATA = {
           nombre: "Compartimiento para Huevos Versión 2",
           descripcion: "Organizador de huevos con capacidad ampliada y cierre superior.",
           imagen: "images/compartimiento-huevos2.png",
-          filamento: [],
+          gramos: 6735.7,
+          tiempoImpresion: { horas: 5, minutos: 50 },
+          costo: 6750,
+          precioMayorista: 13500,
+          precioMinorista: 20250,
           destacado: false
         },
         {
@@ -146,7 +182,11 @@ const CATALOGO_DATA = {
           nombre: "Lámpara de Escritorio 3D",
           descripcion: "Lámpara decorativa con pantalla impresa en 3D que proyecta patrones de luz.",
           imagen: "images/lampara.png",
-          filamento: [],
+          gramos: 5330.6,
+          tiempoImpresion: { horas: 5, minutos: 0 },
+          costo: 5500,
+          precioMayorista: 11000,
+          precioMinorista: 16500,
           destacado: false
         },
         {
@@ -154,7 +194,11 @@ const CATALOGO_DATA = {
           nombre: "Lámpara Luna 3D",
           descripcion: "Réplica de la luna con textura realista impresa en 3D e iluminación cálida.",
           imagen: "images/lampara-luna.png",
-          filamento: [],
+          gramos: 2983.14,
+          tiempoImpresion: { horas: 9, minutos: 30 },
+          costo: 9500,
+          precioMayorista: 19000,
+          precioMinorista: 28500,
           destacado: false
         },
         {
@@ -170,7 +214,11 @@ const CATALOGO_DATA = {
           nombre: "Maceta Funcional 3D",
           descripcion: "Maceta con sistema de drenaje integrado y diseño moderno.",
           imagen: "images/maceta1.png",
-          filamento: [],
+          gramos: 4201.52,
+          tiempoImpresion: { horas: 4, minutos: 20 },
+          costo: 4200,
+          precioMayorista: 8400,
+          precioMinorista: 12600,
           destacado: false
         },
         {
@@ -186,7 +234,11 @@ const CATALOGO_DATA = {
           nombre: "Maceta Colgante 3D",
           descripcion: "Maceta colgante con soporte integrado para paredes o techos.",
           imagen: "images/maceta3.png",
-          filamento: [],
+          gramos: 1812.24,
+          tiempoImpresion: { horas: 2, minutos: 0 },
+          costo: 2000,
+          precioMayorista: 4000,
+          precioMinorista: 6000,
           destacado: false
         },
         {
@@ -195,6 +247,138 @@ const CATALOGO_DATA = {
           descripcion: "Maceta con diseño contemporáneo, acabado mate y base para drenaje.",
           imagen: "images/maceta4.png",
           filamento: [],
+          destacado: false
+        },
+        {
+          id: "maceta-tierna",
+          nombre: "Maceta Tierna",
+          descripcion: "Maceta tierna impresa en 3D con detalles delicados.",
+          imagen: "",
+          gramos: 1964.79,
+          tiempoImpresion: { horas: 2, minutos: 25 },
+          costo: 2500,
+          precioMayorista: 5000,
+          precioMinorista: 7500,
+          destacado: false
+        },
+        {
+          id: "porta-joyas",
+          nombre: "Porta Joyas",
+          descripcion: "Organizador decorativo para guardar y exhibir joyería.",
+          imagen: "",
+          gramos: 1005.51,
+          tiempoImpresion: { horas: 0, minutos: 54 },
+          costo: 2000,
+          precioMayorista: 4000,
+          precioMinorista: 6000,
+          destacado: false
+        },
+        {
+          id: "porta-joyas-mariposa",
+          nombre: "Porta Joyas Mariposa",
+          descripcion: "Porta joyas con diseño de mariposa.",
+          imagen: "",
+          gramos: 8336.2,
+          tiempoImpresion: { horas: 9, minutos: 50 },
+          costo: 9500,
+          precioMayorista: 19000,
+          precioMinorista: 28500,
+          destacado: false
+        },
+        {
+          id: "porta-joyas-gato",
+          nombre: "Porta Joyas Gato",
+          descripcion: "Porta joyas con diseño de gato.",
+          imagen: "",
+          gramos: 5916.31,
+          tiempoImpresion: { horas: 6, minutos: 45 },
+          costo: 6750,
+          precioMayorista: 13500,
+          precioMinorista: 20250,
+          destacado: false
+        },
+        {
+          id: "porta-joyas-dragon",
+          nombre: "Porta Joyas Dragón",
+          descripcion: "Porta joyas con diseño de dragón.",
+          imagen: "",
+          gramos: 8360.18,
+          tiempoImpresion: { horas: 9, minutos: 50 },
+          costo: 9500,
+          precioMayorista: 19000,
+          precioMinorista: 28500,
+          destacado: false
+        },
+        {
+          id: "porta-joyas-zorro",
+          nombre: "Porta Joyas Zorro",
+          descripcion: "Porta joyas con diseño de zorro.",
+          imagen: "",
+          gramos: 6419.88,
+          tiempoImpresion: { horas: 7, minutos: 20 },
+          costo: 7200,
+          precioMayorista: 14400,
+          precioMinorista: 21600,
+          destacado: false
+        },
+        {
+          id: "porta-joyas-murcielago",
+          nombre: "Porta Joyas Murciélago",
+          descripcion: "Porta joyas con diseño de murciélago.",
+          imagen: "",
+          gramos: 8823.44,
+          tiempoImpresion: { horas: 12, minutos: 0 },
+          costo: 12000,
+          precioMayorista: 24000,
+          precioMinorista: 36000,
+          destacado: false
+        },
+        {
+          id: "porta-joyas-perro",
+          nombre: "Porta Joyas Perro",
+          descripcion: "Porta joyas con diseño de perro.",
+          imagen: "",
+          gramos: 8417.84,
+          tiempoImpresion: { horas: 7, minutos: 0 },
+          costo: 8500,
+          precioMayorista: 17000,
+          precioMinorista: 25500,
+          destacado: false
+        },
+        {
+          id: "ordenador-platos-x10",
+          nombre: "Ordenador de Platos Vertical x10",
+          descripcion: "Organizador vertical para hasta 10 platos.",
+          imagen: "",
+          gramos: 3775,
+          tiempoImpresion: { horas: 4, minutos: 5 },
+          costo: 4000,
+          precioMayorista: 8000,
+          precioMinorista: 12000,
+          destacado: false
+        },
+        {
+          id: "ordenador-platos-x8",
+          nombre: "Ordenador de Platos Vertical x8",
+          descripcion: "Organizador vertical para hasta 8 platos.",
+          imagen: "",
+          gramos: 3100,
+          tiempoImpresion: { horas: 3, minutos: 10 },
+          costo: 3100,
+          precioMayorista: 6200,
+          precioMinorista: 9300,
+          destacado: false
+        },
+        {
+          id: "ordenador-platos-x6",
+          nombre: "Ordenador de Platos Vertical x6",
+          descripcion: "Organizador vertical para hasta 6 platos.",
+          imagen: "",
+          gramos: 2400,
+          tiempoImpresion: { horas: 2, minutos: 35 },
+          costo: 2400,
+          precioMayorista: 4800,
+          precioMinorista: 7200,
           destacado: false
         }
       ]
@@ -279,7 +463,7 @@ const CATALOGO_DATA = {
           id: "fideos-sensorial",
           nombre: "Set Fideos, Salsa, Tomateflexible, Tenedor, Cuchillo, Albóndiga a Broch y Bowl Sensorial",
           descripcion: "Set de comida sensorial con fideos, salsa, tomate, tenedor, cuchillo, albóndiga y bowl.",
-          imagen: "images/fideos-salsa-tomateflexible-tenedorcuchillo-albondigaabrojo-bowl-sensorial.jpeg",
+          imagen: "images/fideos-salsa-tomateflexible-tenedorcuchillo-albondigaabrojo-bowl-sensorial.png",
           filamento: [],
           destacado: true
         },

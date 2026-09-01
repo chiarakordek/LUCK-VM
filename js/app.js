@@ -95,7 +95,7 @@
   function renderCard(product) {
     return `
       <div class="product-card" data-product-id="${product.id}">
-        <img class="card-image" src="${product.imagen}${IMG_V}" alt="${product.nombre}" loading="lazy">
+        <img class="card-image" src="${product.imagen || 'images/placeholder.png'}${IMG_V}" alt="${product.nombre}" loading="lazy" onerror="this.onerror=null;this.src='images/placeholder.png?v=1';">
         <div class="card-body">
           <h3 class="card-name">${product.nombre}</h3>
           <p class="card-desc">${product.descripcion}</p>
@@ -151,8 +151,9 @@
     currentProduct = product;
     currentQty = 1;
 
-    $('#modalImage').src = product.imagen + IMG_V;
+    $('#modalImage').src = (product.imagen || 'images/placeholder.png') + IMG_V;
     $('#modalImage').alt = product.nombre;
+    $('#modalImage').onerror = function() { this.onerror = null; this.src = 'images/placeholder.png?v=1'; };
     $('#modalName').textContent = product.nombre;
     $('#modalDesc').textContent = product.descripcion;
     $('#qtyValue').textContent = '1';
@@ -228,7 +229,7 @@
       const el = document.createElement('div');
       el.className = 'cart-item';
       el.innerHTML = `
-        <img class="cart-item-img" src="${product.imagen}${IMG_V}" alt="${product.nombre}">
+        <img class="cart-item-img" src="${product.imagen || 'images/placeholder.png'}${IMG_V}" alt="${product.nombre}" onerror="this.onerror=null;this.src='images/placeholder.png?v=1';">
         <div class="cart-item-info">
           <div class="cart-item-name">${product.nombre}</div>
           <div class="cart-item-qty">Cantidad: ${item.cantidad}</div>
